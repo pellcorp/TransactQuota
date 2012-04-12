@@ -1,0 +1,408 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+Design by Free CSS Templates
+http://www.freecsstemplates.org
+Released for free under a Creative Commons Attribution 2.5 License
+
+Name       : Hot Air Balloons
+Description: A two-column, fixed-width design with dark color scheme.
+Version    : 1.0
+Released   : 20081210
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <title>
+  Customer Portal
+  </title>
+  
+  
+  
+     <meta name="keywords" content="TransACT, Neighbourhood Cable, Internet, Phone" />
+     <meta name="description" content="TransACT Victoria Customer Portal" />
+     <meta name="author" content="dloginov@ncmail.com.au" />
+     <script src="/portal/static/jquery.js" type="text/javascript"></script>
+     <link href="/portal/static/calendar.css" rel="stylesheet" type="text/css" />
+     <script src="/portal/static/calendar.js" type="text/javascript"></script>
+     <link href="/portal/static/plugin_layouts/layouts/HotAirBalloons/style.css" rel="stylesheet" type="text/css" />
+     <script src="/portal/static/plugin_layouts/superfish.js" type="text/javascript"></script>
+<script type="text/javascript"><!--
+function popup(url) {
+  newwindow=window.open(url,'name','height=400,width=600');
+  if (window.focus) newwindow.focus();
+  return false;
+}
+function collapse(id) { jQuery('#'+id).slideToggle(); }
+function fade(id,value) { if(value>0) jQuery('#'+id).hide().fadeIn('slow'); else jQuery('#'+id).show().fadeOut('slow'); }
+function ajax(u,s,t) {
+    query = '';
+    if (typeof s == "string") {
+        d = jQuery(s).serialize();
+        if(d){ query = d; }
+    } else {
+        pcs = [];
+        for(i=0; i<s.length; i++) {
+            q = jQuery("[name="+s[i]+"]").serialize();
+            if(q){pcs.push(q);}
+        }
+        if (pcs.length>0){query = pcs.join("&");}
+    }
+    jQuery.ajax({type: "POST", url: u, data: query, success: function(msg) { if(t) { if(t==':eval') eval(msg); else jQuery("#" + t).html(msg); } } }); 
+}
+String.prototype.reverse = function () { return this.split('').reverse().join('');};
+function web2py_ajax_init() {
+  jQuery('.hidden').hide();
+  jQuery('.error').hide().slideDown('slow');
+  jQuery('.flash').click(function() { jQuery(this).fadeOut('slow'); return false; });
+  // jQuery('input[type=submit]').click(function(){var t=jQuery(this);t.hide();t.after('<input class="submit_disabled" disabled="disabled" type="submit" name="'+t.attr("name")+'_dummy" value="'+t.val()+'">')});
+  jQuery('input.integer').keyup(function(){this.value=this.value.reverse().replace(/[^0-9\-]|\-(?=.)/g,'').reverse();});
+  jQuery('input.double,input.decimal').keyup(function(){this.value=this.value.reverse().replace(/[^0-9\-\.]|[\-](?=.)|[\.](?=[0-9]*[\.])/g,'').reverse();});
+  jQuery("input[type='checkbox'].delete").each(function(){jQuery(this).click(function() { if(this.checked) if(!confirm("Sure you want to delete this object?")) this.checked=false; });});
+  try {jQuery("input.date").focus( function() {Calendar.setup({
+     inputField:this.id, ifFormat:"%Y-%m-%d", showsTime:false
+  }); }); } catch(e) {};
+  try { jQuery("input.datetime").focus( function() {Calendar.setup({
+     inputField:this.id, ifFormat:"%Y-%m-%d %H:%M:%S", showsTime: true,timeFormat: "24"
+  }); }); } catch(e) {};
+  try { jQuery("input.time").clockpick({
+      starthour:0, endhour:23, showminutes:true, military:true
+  }); } catch(e) {};
+};
+jQuery(document).ready(function(){
+   jQuery('.flash').hide();
+   if(jQuery('.flash').html()!='') jQuery('.flash').slideDown('slow');
+   web2py_ajax_init();});
+
+function web2py_trap_form(action,target) {
+   jQuery('#'+target+' form').each(function(i){
+      var form=jQuery(this);
+      if(!form.hasClass('no_trap'))
+        form.submit(function(obj){
+         jQuery('.flash').hide().html('');
+         web2py_ajax_page('post',action,form.serialize(),target);
+         return false;
+      });
+   });
+}
+
+function web2py_ajax_page(method,action,data,target) {
+  jQuery.ajax({'type':method,'url':action,'data':data,
+    'beforeSend':function(xhr) {
+      xhr.setRequestHeader('web2py-component-location',document.location);
+      xhr.setRequestHeader('web2py-component-element',target);},
+    'complete':function(xhr,text){
+      var html=xhr.responseText;
+      var content=xhr.getResponseHeader('web2py-component-content'); 
+      var command=xhr.getResponseHeader('web2py-component-command');
+      var flash=xhr.getResponseHeader('web2py-component-flash');
+      var t = jQuery('#'+target);
+      if(content=='prepend') t.prepend(html); 
+      else if(content=='append') t.append(html);
+      else if(content!='hide') t.html(html);  
+      web2py_trap_form(action,target);
+      web2py_ajax_init();      
+      if(command) eval(command);
+      if(flash) jQuery('.flash').html(flash).slideDown();
+      }
+    });
+}
+function web2py_component(action,target) {
+    jQuery(document).ready(function(){ web2py_ajax_page('get',action,null,target); });
+}
+//--></script>
+
+<link rel = "shortcut icon" href = "/portal/static/favicon.ico"
+        type = "image/x-icon" />
+<style>
+
+ul.web2py-menu-vertical {
+    width: 150px;
+    position: relative;
+    top: 1em;
+    left: 1em;
+    z-index: 30;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+}
+
+ul.web2py-menu-vertical li {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    width: 150px;
+    background: black;
+    text-align:left;
+}
+
+ul.web2py-menu-vertical li a {
+    margin: 0;
+    padding: 1px 3px 1px 3px;
+    border:0;
+    width: 144px;
+    color: white;
+    font-size:12px;
+}
+
+div.flash {
+    position: fixed;
+    float: right;
+    padding: 10px;
+    top: 10px;
+    right: 30px;
+    opacity: 0.75;
+    margin: 10px 10px 10px 10px;
+    text-align: center;
+    clear: both;
+    color: #fff;
+    font-size: 11pt;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background: black;
+    border: 2px solid #fff;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    z-index: 2;
+}
+
+div.error {
+    background-color: red;
+    color: white;
+    padding: 3px;
+}
+
+.auth_navbar {
+    text-align:right;
+    /* z-index:20;
+    position: absolute;
+    top: 2px;
+    right: 30px; */
+    float: right;
+    border: 0;
+    padding: 0;
+    padding-right: 10px;
+    color: black;
+    font-weight: bold;
+}
+
+.auth_navbar_link {
+    color: darkblue;
+    font-weight: bold;
+    font-style: italic;
+    text-decoration: none;
+}
+
+</style>
+ </head>
+ <body>
+  <div id="wrapper">
+   <div id="header">
+    <div id="logo"><h1>Customer Portal</h1>
+    </div>
+     <div class="auth_navbar">Welcome Jason Pell [ <a class="auth_navbar_link" href="/portal/default/user/logout">logout</a> | <a class="auth_navbar_link" href="/portal/default/user/change_password">change password</a>]</div>
+   </div>
+   <!-- end header -->
+   <div id="menu">
+    <ul class="web2py-menu"><li><a href="/portal/default/index">Your profile</a></li><li><a href="/portal/details/index">Data usage details</a></li><li><a href="/portal/datablock/index">Buy more data</a></li><li><a href="/portal/email/index">Link email addresses</a></li></ul>
+    <script>
+      jQuery(document).ready(function(){jQuery('ul.web2py-menu').superfish({delay:400});});
+    </script>
+   </div>
+   <!-- end #menu -->
+   <div id="page">
+    <div id="content">
+     <div class="flash">Welcome</div>
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<hr />
+<h3>Your profile</h3>
+<ul>
+<li>Name: Jason Pell</li>
+
+<li>Account number: 46917</li>
+<li>Billing cycle: 1 April
+to 30 April</li>
+<li>Username: jpell</li>
+
+<li>IP address: 203.208.100.210</li>
+</ul>
+
+
+<h3>Plan details</h3>
+<ul>
+<li><b>Connection type:</b> cable</li>
+<li><b>Plan name:</b> HW 30M 100G 50G/50G DU 64 30/2
+
+- data plan, phone-capable
+</li>
+
+<li><b>Flat rate/shaped option:</b>
+
+Yes</li>
+
+
+<li><b>Plan data allowance:</b>
+
+50 GB peak&nbsp;&nbsp;&nbsp;&nbsp;
+50 GB off-peak
+</li>
+
+</ul>
+
+
+
+
+
+
+<br />
+<table>
+<tbody>
+
+
+
+
+
+
+
+</tbody>
+</table>
+
+<h3>Data allowance and usage</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>&nbsp;</th>
+
+<th>Peak</th>
+
+<th>Off-peak</th>
+
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style = "font-weight: bold; text-align: right; white-space: nowrap;">
+Total combined download and upload allowance:
+</td>
+
+<td style = "text-align: right; white-space: nowrap;">
+50 GB
+</td>
+
+<td style = "text-align: right; white-space: nowrap;">
+50 GB
+</td>
+
+</tr>
+
+<tr>
+<td style = "font-weight: bold; text-align: right; white-space: nowrap;">
+Current combined download and upload usage:
+</td>
+
+<td style = "text-align: right; white-space: nowrap;">
+35.069 GB <span style="color: black;">(70.14% used)</span>
+</td>
+
+<td style = "text-align: right; white-space: nowrap;">
+10.851 GB <span style="color: black;">(21.7% used)</span>
+</td>
+
+</tr>
+</table>
+
+<br />
+<h3>Email accounts</h3>
+<ul>
+<li><b>Primary</b>
+<br />
+
+<a href="/portal/webmail/index?email=jpell%40ncable.net.au&amp;primary=1">jpell@ncable.net.au</a>
+
+(<a href="/portal/forward/index?email=jpell%40ncable.net.au">forwarded to:</a>
+jasonmpell@gmail.com)
+
+</li>
+
+</li>
+</ul>
+Clicking on the email addresses above will redirect you to the webmail login
+for that address.<br />
+<i>If you have other email addresses with TransACT Victoria,
+<a href="/portal/email/index">click here</a>
+to link them to your primary service account</i>
+
+<br /><br />
+<h3>Fixed phone lines</h3>
+<ul>
+
+<li>
+
+<a href = "/portal/phone/index?phone=03+4208+0849">03 4208 0849</a>
+<a href = "/portal/phone_features/index?phone=03+4208+0849">(view/update services)</a>
+
+
+
+- VP12 - HomeTalk 1
+</li>
+
+</ul>
+
+
+
+Clicking on the phone number above will redirect you to the billing screen
+where you can view your call detail records as well as billing history for this
+service. If you have not accessed this service please contact our customer care
+team to create a PIN number.
+
+
+
+<br /><br />
+
+<b>NOTE:</b> <i>Please report any errors or omissions noticed to the
+customer care team. <a href =
+"mailto:_Geelong.CSR@transact.com.au?Subject=Request from portal: jpell - account 46917">Click here</a></i>
+
+    </div>
+    <!-- end #content -->
+
+    <div style="clear: both;">
+     &nbsp;
+    </div>
+   </div>
+   <!-- end #page -->
+   <div id="footer">
+    <p>
+    Copyright &#169; 2011 TransACT Communications Pty Ltd. |
+    <a style = "color: black;" href = "http://transact.com.au/terms"
+    >TransACT terms and conditions</a>
+    <br />Powered by <a href="http://www.web2py.com">web2py</a>.
+     Based on design by<a href="http://www.freecsstemplates.org/">
+     Free CSS Templates
+     </a>.
+    </p>
+   </div>
+   <!-- end #footer -->
+  </div>
+ </body>
+</html>
