@@ -42,6 +42,8 @@ public class TransactQuota {
 			
 			String formKey = doGetLogin(localContext);
         	return doSubmit(formKey, localContext);
+		} catch(InvalidCredentialsException e) {
+			throw e;
         } catch(Exception e) {
         	throw new UsageNotAvailableException(e);
         }
@@ -73,6 +75,10 @@ public class TransactQuota {
 		String html = EntityUtils.toString(response.getEntity());
 
 		String usageHtml = UsageParser.getUsageBlock(html);
-		return UsageParser.parseUsageBlock(usageHtml);
+		if (usageHtml != null) {
+			return UsageParser.parseUsageBlock(usageHtml);
+		} else {
+			throw new InvalidCredentialsException();
+		}
 	}
 }

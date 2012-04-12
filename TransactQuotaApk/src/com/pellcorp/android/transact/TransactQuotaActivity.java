@@ -1,11 +1,14 @@
 package com.pellcorp.android.transact;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,24 +17,18 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class TransactQuotaActivity extends Activity implements  OnClickListener, OnSharedPreferenceChangeListener {
+public class TransactQuotaActivity extends Activity implements  OnClickListener {
+	private static final String TAG = "MyActivity";
+	
 	// FIXME - is there a way to get android developer kit generate these for me if I define them
 	// in some xml file.
 	private static final String USERNAME_KEY = "username";
 	private static final String PASSWORD_KEY = "password";
 	
-	private String username;
-	private String password;
-	
-	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        username = sharedPreferences.getString(USERNAME_KEY, null);
-        password = sharedPreferences.getString(PASSWORD_KEY, null);
         
         Button refreshButton = (Button) findViewById(R.id.refresh_button);
         refreshButton.setOnClickListener(this);
@@ -42,20 +39,34 @@ public class TransactQuotaActivity extends Activity implements  OnClickListener,
     private void refreshUsage() {
     	TextView peakUsage = (TextView) findViewById(R.id.PeakUsage);
         TextView offPeakUsage = (TextView) findViewById(R.id.OffPeakUsage);
-
+        
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String username = sharedPreferences.getString(USERNAME_KEY, "");
+        String password = sharedPreferences.getString(PASSWORD_KEY, "");
+        
         peakUsage.setText("-");
         offPeakUsage.setText("-");
         
         // TODO - this probably needs to be a separate intent, or else I need a refresh button.
-        if (username != null && password != null) {
+        if (username.length() > 0 && password.length() > 0) {
         	try {
 	        	TransactQuota quota = new TransactQuota(username, password);
 	        	Usage usage = quota.getUsage();
 	        	peakUsage.setText(usage.getPeakUsage().toString());
 	            offPeakUsage.setText(usage.getOffPeakUsage().toString());
+        	} catch(InvalidCredentialsException e) {
+        		AlertDialog dialog = createErrorDialog(getString(R.string.invalid_account_details));
+        		dialog.show();
+        		
         	} catch(UsageNotAvailableException e) {
-        		// FIXME - display dialog message
+        		Log.e(TAG, "", e);
+        		
+        		AlertDialog dialog = createErrorDialog(e.getMessage());
+        		dialog.show();
         	}
+        } else {
+        	Dialog dialog = createSettingsMissingDialog();
+        	dialog.show();
         }
     }
     
@@ -78,20 +89,43 @@ public class TransactQuotaActivity extends Activity implements  OnClickListener,
 		return false;
 	}
 
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
-		if (key.equals(USERNAME_KEY)) {
-			username = sharedPreferences.getString(USERNAME_KEY, null);
-		} else if(key.equals(PASSWORD_KEY)) {
-			password = sharedPreferences.getString(PASSWORD_KEY, null);
-		}
-	}
-
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.refresh_button:
 				refreshUsage();
 				break;
 		}
+	}
+	
+	private AlertDialog createErrorDialog(String message) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(message)
+		.setCancelable(false)
+		.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int id) {
+	        	   dialog.cancel();
+	           }
+	       });
+		
+		return builder.create();
+	}
+	
+	private AlertDialog createSettingsMissingDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		builder.setMessage(R.string.settings_missing_label)
+	       .setCancelable(false)
+	       .setPositiveButton(R.string.settings_label, new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int id) {
+	        	   startActivity(
+	        			   new Intent(TransactQuotaActivity.this, Prefs.class));
+	           }
+	       })
+	       .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int id) {
+	        	   dialog.cancel();
+	           }
+	       });
+		return builder.create();
 	}
 }

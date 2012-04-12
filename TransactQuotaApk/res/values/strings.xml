@@ -6,11 +6,14 @@
     <string name="settings_title">Transact Account Details</string>
     <string name="settings_shortcut">s</string>
     <string name="username_title">Username</string>
-    <string name="username_summary">Please provide your Transaction Username</string>
+    <string name="username_summary">Please provide your Transact Username</string>
     <string name="password_title">Password</string>
     <string name="password_summary">Please provide your Transact Password</string>
     <string name="peak_usage">Peak Usage (GB)</string>
     <string name="offpeak_usage">Off Peak Usage (GB)</string>
     <string name="refresh_label">Refresh</string>
+    <string name="settings_missing_label">Username and Password are not set.</string>
+    <string name="exit_label">Exit</string>
+    <string name="invalid_account_details">Account Details are incorrect</string>
     
 </resources>
