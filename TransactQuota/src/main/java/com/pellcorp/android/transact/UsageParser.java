@@ -2,6 +2,7 @@ package com.pellcorp.android.transact;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 public final class UsageParser {
 	private UsageParser() {
@@ -13,20 +14,33 @@ public final class UsageParser {
 		String endTableHtml = "</table>";
 		
 		int indexOf = html.indexOf(tableHeaderHtml);
-
-		String table = html.substring(indexOf);
-		indexOf = table.indexOf(startTableHtml);
+		if (indexOf != -1) {
+			String table = html.substring(indexOf);
+			indexOf = table.indexOf(startTableHtml);
+			
+			table = table.substring(indexOf);
+			indexOf = table.indexOf(endTableHtml);
+			
+			table = table.substring(0, indexOf + endTableHtml.length());
 		
-		table = table.substring(indexOf);
-		indexOf = table.indexOf(endTableHtml);
-		
-		table = table.substring(0, indexOf + endTableHtml.length());
-		
-		return table.trim();
+			return table.trim();
+		} else {
+			return null;
+		}
 	}
 	
-	public static Usage parseUsageBlock(String usage) {
-		Document doc = Jsoup.parse(usage);
-		return new Usage(0.0, 0.0);
+	public static Usage parseUsageBlock(String usageHtml) {
+		Document doc = Jsoup.parse(usageHtml);
+		Element tableCells = doc.select("tr").last();
+		String peakUsage = tableCells.select("td").get(1).text();
+		String offPeakUsage = tableCells.select("td").get(2).text();
+		
+		return new Usage(new Double(parseNumber(peakUsage)), 
+				new Double(parseNumber(offPeakUsage)));
+	}
+	
+	private static String parseNumber(String usageText) {
+		int indexOf = usageText.indexOf(" GB");
+		return usageText.substring(0, indexOf);
 	}
 }

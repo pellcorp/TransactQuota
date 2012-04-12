@@ -43,8 +43,7 @@ public class TransactQuota {
 			String formKey = doGetLogin(localContext);
         	return doSubmit(formKey, localContext);
         } catch(Exception e) {
-        	e.printStackTrace();
-        	throw new UsageNotAvailable();
+        	throw new UsageNotAvailableException(e);
         }
 	}
 
@@ -73,26 +72,7 @@ public class TransactQuota {
 		HttpResponse response = client.execute(post, localContext);
 		String html = EntityUtils.toString(response.getEntity());
 
-		//Document doc = Jsoup.parse(html, URL);
-		
-		return parseUsage(html);
-	}
-	
-	private Usage parseUsage(String html) {
-		String tableHeaderHtml = "<h3>Data allowance and usage</h3>";
-		String startTableHtml = "<table>";
-		String endTableHtml = "</table>";
-		
-		int indexOf = html.indexOf(tableHeaderHtml);
-
-		String table = html.substring(indexOf);
-		indexOf = table.indexOf(startTableHtml);
-		table = html.substring(indexOf);
-		indexOf = table.indexOf(endTableHtml);
-		table = html.substring(0, indexOf + endTableHtml.length());
-		
-		System.out.println(table);
-		
-		return new Usage(0.0, 0.0);
+		String usageHtml = UsageParser.getUsageBlock(html);
+		return UsageParser.parseUsageBlock(usageHtml);
 	}
 }
