@@ -2,8 +2,8 @@
 <resources>
 
     <string name="app_name">Transact Quota</string>
-	<string name="settings_label">Settings</string>
-    <string name="settings_title">Transact Quota settings</string>
+	<string name="settings_label">Account Details</string>
+    <string name="settings_title">Transact Account Details</string>
     <string name="settings_shortcut">s</string>
     <string name="username_title">Username</string>
     <string name="username_summary">Please provide your Transaction Username</string>
