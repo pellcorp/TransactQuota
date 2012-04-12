@@ -1,41 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:stretchColumns="1">
+    android:orientation="vertical" >
 
-    <TableRow>
-        <TextView
-            android:layout_column="1"
-            android:id="@+id/PeakUsagePrompt"
-            android:text="@string/peak_usage" 
-            android:padding="3dip" />
-
-        <TextView
-            android:id="@+id/PeakUsage"
-            android:text="" 
-            android:padding="3dip" />
-    </TableRow>
-
-    <TableRow>
-        <TextView
-            android:layout_column="1"
-            android:id="@+id/OffPeakUsagePrompt"
-            android:text="@string/offpeak_usage" 
-            android:padding="3dip" />
-
-        <TextView
-            android:id="@+id/OffPeakUsage"
-            android:text="" 
-            android:padding="3dip" />
-    </TableRow>
-    
-    <TableRow>
-     	<Button
-     	android:layout_column="1"
-        android:id="@+id/refresh_button"
+    <TableLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:stretchColumns="1" >
+
+        <TableRow>
+            <TextView
+                android:id="@+id/PeakUsagePrompt"
+                android:layout_column="1"
+                android:padding="3dip"
+                android:text="@string/peak_usage" />
+
+            <TextView
+                android:id="@+id/PeakUsage"
+                android:padding="3dip"
+                android:text="" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/OffPeakUsagePrompt"
+                android:layout_column="1"
+                android:padding="3dip"
+                android:text="@string/offpeak_usage" />
+
+            <TextView
+                android:id="@+id/OffPeakUsage"
+                android:padding="3dip"
+                android:text="" />
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:id="@+id/refresh_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dip"
         android:text="@string/refresh_label" />
-	</TableRow>
-</TableLayout>
+
+</LinearLayout>
