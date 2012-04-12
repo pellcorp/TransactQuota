@@ -15,5 +15,6 @@
     <string name="settings_missing_label">Username and Password are not set.</string>
     <string name="exit_label">Exit</string>
     <string name="invalid_account_details">Account Details are incorrect</string>
+    <string name="loading_usage">Loading Usage ...</string>
     
 </resources>
