@@ -1,47 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout 
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" 
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:stretchColumns="1">
 
-    <TableRow
-        android:id="@+id/tableRow1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
+    <TableRow>
         <TextView
+            android:layout_column="1"
             android:id="@+id/PeakUsagePrompt"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/peak_usage"
-            android:textAppearance="@layout/main" />
+            android:text="@string/peak_usage" 
+            android:padding="3dip" />
 
         <TextView
             android:id="@+id/PeakUsage"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text=""
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:text="" 
+            android:padding="3dip" />
     </TableRow>
 
-    <TableRow
-        android:id="@+id/tableRow2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
+    <TableRow>
         <TextView
+            android:layout_column="1"
             android:id="@+id/OffPeakUsagePrompt"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/offpeak_usage"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:text="@string/offpeak_usage" 
+            android:padding="3dip" />
 
         <TextView
             android:id="@+id/OffPeakUsage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text=""
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:text="" 
+            android:padding="3dip" />
     </TableRow>
 
 </TableLayout>
