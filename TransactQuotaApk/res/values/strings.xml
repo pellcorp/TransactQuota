@@ -11,5 +11,6 @@
     <string name="password_summary">Please provide your Transact Password</string>
     <string name="peak_usage">Peak Usage (GB)</string>
     <string name="offpeak_usage">Off Peak Usage (GB)</string>
+    <string name="refresh_label">Refresh</string>
     
 </resources>

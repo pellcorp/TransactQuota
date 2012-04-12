@@ -29,5 +29,13 @@
             android:text="" 
             android:padding="3dip" />
     </TableRow>
-
+    
+    <TableRow>
+     	<Button
+     	android:layout_column="1"
+        android:id="@+id/refresh_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/refresh_label" />
+	</TableRow>
 </TableLayout>
