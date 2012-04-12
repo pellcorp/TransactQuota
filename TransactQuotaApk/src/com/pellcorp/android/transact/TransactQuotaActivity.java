@@ -55,9 +55,8 @@ public class TransactQuotaActivity extends Activity implements  OnClickListener 
 	        	peakUsage.setText(usage.getPeakUsage().toString());
 	            offPeakUsage.setText(usage.getOffPeakUsage().toString());
         	} catch(InvalidCredentialsException e) {
-        		AlertDialog dialog = createErrorDialog(getString(R.string.invalid_account_details));
-        		dialog.show();
-        		
+        		Dialog dialog = createSettingsMissingDialog(getString(R.string.invalid_account_details));
+            	dialog.show();
         	} catch(UsageNotAvailableException e) {
         		Log.e(TAG, "", e);
         		
@@ -65,7 +64,7 @@ public class TransactQuotaActivity extends Activity implements  OnClickListener 
         		dialog.show();
         	}
         } else {
-        	Dialog dialog = createSettingsMissingDialog();
+        	Dialog dialog = createSettingsMissingDialog(getString(R.string.settings_missing_label));
         	dialog.show();
         }
     }
@@ -110,20 +109,15 @@ public class TransactQuotaActivity extends Activity implements  OnClickListener 
 		return builder.create();
 	}
 	
-	private AlertDialog createSettingsMissingDialog() {
+	private AlertDialog createSettingsMissingDialog(String message) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-		builder.setMessage(R.string.settings_missing_label)
-	       .setCancelable(false)
+		builder.setMessage(message)
+	       .setCancelable(true)
 	       .setPositiveButton(R.string.settings_label, new DialogInterface.OnClickListener() {
 	           public void onClick(DialogInterface dialog, int id) {
 	        	   startActivity(
 	        			   new Intent(TransactQuotaActivity.this, Prefs.class));
-	           }
-	       })
-	       .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-	           public void onClick(DialogInterface dialog, int id) {
-	        	   dialog.cancel();
 	           }
 	       });
 		return builder.create();
