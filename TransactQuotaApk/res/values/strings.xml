@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, TransactQuotaActivity!</string>
-    <string name="app_name">TransactQuota</string>
-
+    <string name="app_name">Transact Quota</string>
+	<string name="settings_label">Settings</string>
+    <string name="settings_title">Transact Quota settings</string>
+    <string name="settings_shortcut">s</string>
+    <string name="username_title">Username</string>
+    <string name="username_summary">Please provide your Transaction Username</string>
+    <string name="password_title">Password</string>
+    <string name="password_summary">Please provide your Transact Password</string>
+    <string name="peak_usage">Peak Usage (GB)</string>
+    <string name="offpeak_usage">Off Peak Usage (GB)</string>
+    
 </resources>
