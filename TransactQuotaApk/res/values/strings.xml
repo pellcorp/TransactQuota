@@ -16,5 +16,7 @@
     <string name="exit_label">Exit</string>
     <string name="invalid_account_details">Account Details are incorrect</string>
     <string name="loading_usage">Loading Usage ...</string>
+    <string name="wifi_not_enabled">Current Network connection is not wifi!</string>
+    <string />
     
 </resources>

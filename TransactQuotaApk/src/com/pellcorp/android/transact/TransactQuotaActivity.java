@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -37,22 +40,37 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 	}
 
 	private void refreshUsage() {
-
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(TransactQuotaActivity.this);
-		final String username = sharedPreferences.getString(USERNAME_KEY, "");
-		final String password = sharedPreferences.getString(PASSWORD_KEY, "");
-
-		// TODO - this probably needs to be a separate intent, or else I need a
-		// refresh button.
-		if (username.length() > 0 && password.length() > 0) {
-			new DownloadUsageTask().execute(username, password);
+		if (isWifiConnected()) {
+			SharedPreferences sharedPreferences = PreferenceManager
+					.getDefaultSharedPreferences(TransactQuotaActivity.this);
+			final String username = sharedPreferences.getString(USERNAME_KEY, "");
+			final String password = sharedPreferences.getString(PASSWORD_KEY, "");
+	
+			// TODO - this probably needs to be a separate intent, or else I need a
+			// refresh button.
+			if (username.length() > 0 && password.length() > 0) {
+				new DownloadUsageTask().execute(username, password);
+			} else {
+				Dialog dialog = createSettingsMissingDialog(getString(R.string.settings_missing_label));
+				dialog.show();
+			}
 		} else {
-			Dialog dialog = createSettingsMissingDialog(getString(R.string.settings_missing_label));
+			Dialog dialog = createSettingsMissingDialog(getString(R.string.wifi_not_enabled));
 			dialog.show();
 		}
 	}
 
+	private boolean isWifiConnected() {
+	    ConnectivityManager connectivityManager = (ConnectivityManager)
+	        getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo networkInfo = null;
+	    if (connectivityManager != null) {
+	        networkInfo =
+	            connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+	    }
+	    return networkInfo == null ? false : networkInfo.isConnected();
+	}
+	
 	private class DownloadUsageTask extends AsyncTask<String, Void, Usage> {
 		private boolean invalidCredentials;
 		private String errorMessage;
@@ -120,7 +138,6 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 		case R.id.settings:
 			startActivity(new Intent(this, Prefs.class));
 			return true;
-			// More items go here (if any) ...
 		}
 		return false;
 	}
