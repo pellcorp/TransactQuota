@@ -7,7 +7,7 @@ Also because of transacts own restrictions this app will not be able to load you
 info unless you are using WIFI that is connected to the internet via your transact modem!
 
 TODO - I am working on a SSH Tunnel to allow communication with Transact via your local
-environment if you expose a SSH server and Squid like tunnel.
+environment if you expose a SSH server which supports port forwarding.
 
 
 
