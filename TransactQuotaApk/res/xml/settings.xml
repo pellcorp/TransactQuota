@@ -5,18 +5,27 @@
     <PreferenceCategory android:title="@string/authentication_settings">
         <EditTextPreference
             android:defaultValue=""
-            android:key="username"
+            android:key="account.username"
             android:summary="@string/username_summary"
             android:title="@string/username_title" />
         <EditTextPreference
             android:defaultValue=""
-            android:key="password"
+            android:key="account.username"
             android:summary="@string/password_summary"
             android:title="@string/password_title" />
     </PreferenceCategory>
     
     <PreferenceCategory android:title="@string/tunneling_settings">
-        <Preference />
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="account.username"
+            android:summary="@string/username_summary"
+            android:title="@string/username_title" />
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="account.username"
+            android:summary="@string/password_summary"
+            android:title="@string/password_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>

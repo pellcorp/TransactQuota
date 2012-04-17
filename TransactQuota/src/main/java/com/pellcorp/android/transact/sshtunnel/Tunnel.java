@@ -42,6 +42,9 @@ public class Tunnel {
 	public void disconnect() {
 		try {
 			session.disconnect();
+		} catch(Throwable t) {
+			// no exceptions can be thrown by this method!
+			return;
 		} finally {
 			session = null;
 		}

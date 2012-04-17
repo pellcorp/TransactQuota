@@ -9,14 +9,17 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.pellcorp.android.transact.ResourceUtils;
-import com.pellcorp.android.transact.sshtunnel.SshHost;
-import com.pellcorp.android.transact.sshtunnel.Tunnel;
-import com.pellcorp.android.transact.sshtunnel.TunnelConfig;
 
+/**
+ * Note this is not going to work on your host, unless you append the android.pk.pub
+ * to your .ssh/authorized_keys2 file
+ */
 public class TunnelTest {
+	@Ignore
 	@Test
 	public void test() throws Exception {
 		File privateKey = ResourceUtils.getResourceAsFile("/android.pk");
