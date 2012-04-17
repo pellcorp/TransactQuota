@@ -9,6 +9,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -19,17 +20,29 @@ import com.pellcorp.android.transact.ResourceUtils;
  * to your .ssh/authorized_keys2 file
  */
 public class TunnelTest {
-	@Ignore
-	@Test
-	public void test() throws Exception {
+	private TunnelConfig tunnelConfig;
+	
+	@Before
+	public void setUp() throws Exception {
 		File privateKey = ResourceUtils.getResourceAsFile("/android.pk");
 		
-		TunnelConfig tunnelConfig = new TunnelConfig(
-				new SshHost("127.0.0.1", 22), //tunnel
+		tunnelConfig = new TunnelConfig(
+				new SshHost("192.168.79.156", 22), //tunnel
 				new HttpHost("192.168.0.5", 3128), //proxy 
 				"developer",
 				privateKey);
-
+	}
+	
+	@Test
+	@Ignore
+	public void testShell() throws Exception {
+		Shell shell = new Shell(tunnelConfig);
+		System.out.println(shell.getShellLoginMessage());
+	}
+	
+	@Test
+	@Ignore
+	public void testTunnel() throws Exception {
 		Tunnel tunnel = new Tunnel(tunnelConfig);
 		HttpHost proxyHost = tunnel.connect();
 		

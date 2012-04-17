@@ -18,6 +18,17 @@ public class Tunnel {
 	}
 	
 	public HttpHost connect() throws JSchException {
+		init();
+
+		int port = session.setPortForwardingL(
+				0, // Auto assign a local port 
+				tunnelConfig.getProxyHost().getHostName(), 
+				tunnelConfig.getProxyHost().getPort());
+		
+		return new HttpHost("localhost", port);
+	}
+
+	protected Session init() throws JSchException {
 		if (session != null) {
 			throw new IllegalStateException("Session already established");
 		}
@@ -30,13 +41,8 @@ public class Tunnel {
 		session.setConfig("StrictHostKeyChecking", "no");
 
 		session.connect();
-
-		int port = session.setPortForwardingL(
-				0, // Auto assign a local port 
-				tunnelConfig.getProxyHost().getHostName(), 
-				tunnelConfig.getProxyHost().getPort());
 		
-		return new HttpHost("localhost", port);
+		return session;
 	}
 	
 	public void disconnect() {
