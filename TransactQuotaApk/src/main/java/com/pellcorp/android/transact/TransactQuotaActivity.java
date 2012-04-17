@@ -1,7 +1,9 @@
 package com.pellcorp.android.transact;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -29,11 +31,6 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 		
 		Button refreshButton = (Button) findViewById(R.id.refresh_button);
 		refreshButton.setOnClickListener(this);
-
-//		ConnectivityManager connectivityManager = (ConnectivityManager)
-//	    		getSystemService(Context.CONNECTIVITY_SERVICE);
-//		
-//		NetworkManagement networkManagement = new NetworkManagement(connectivityManager);
 	}
 	
 	@Override
@@ -48,19 +45,9 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 		
 		final Preferences preferences = new Preferences(sharedPreferences);
 		
-		//if (preferences.isTunnelingEnabled()) {
 		if (preferences.getAccountUsername() != null && preferences.getAccountPassword() != null) {
 			try {
-				DownloadResult<Usage> usage = new DownloadTask<Usage>(this) {
-					@Override
-					protected Usage doTask(String username, String password) throws IOException {
-						TransactQuota quota = new TransactQuota(
-								preferences.getTunnelConfig(), 
-								username, password);
-						return quota.getUsage();
-					}
-				}.execute(preferences.getAccountUsername(), preferences.getAccountPassword())
-				.get();
+				DownloadResult<Usage> usage = doUsageDownload(preferences);
 				
 				if (usage.getResult() != null) {
 					TextView peakUsage = (TextView) findViewById(R.id.PeakUsage);
@@ -83,10 +70,21 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 			Dialog dialog = createSettingsMissingDialog(getString(R.string.settings_missing_label));
 			dialog.show();
 		}
-//		} else {
-//			Dialog dialog = createSettingsMissingDialog(getString(R.string.wifi_not_enabled));
-//			dialog.show();
-//		}
+	}
+
+	private DownloadResult<Usage> doUsageDownload(final Preferences preferences)
+			throws InterruptedException, ExecutionException, TimeoutException {
+		DownloadResult<Usage> usage = new DownloadTask<Usage>(this) {
+			@Override
+			protected Usage doTask(String username, String password) throws IOException {
+				TransactQuota quota = new TransactQuota(
+						preferences.getTunnelConfig(), 
+						username, password);
+				return quota.getUsage();
+			}
+		}.execute(preferences.getAccountUsername(), preferences.getAccountPassword())
+		.get(USAGE_TIMEOUT, TimeUnit.SECONDS);
+		return usage;
 	}
 
 	@Override
