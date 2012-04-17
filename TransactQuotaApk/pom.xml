@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>TransactQuotaApk</artifactId>
 	<packaging>apk</packaging>
@@ -9,51 +8,51 @@
 		<artifactId>TransactQuotaParent</artifactId>
 		<version>0.0.3-SNAPSHOT</version>
 	</parent>
-	
+
 	<name>TransactQuota</name>
 	<dependencies>
-	    <dependency>
+		<dependency>
 			<groupId>com.pellcorp.android</groupId>
 			<artifactId>TransactQuota</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
-	    <dependency>
+
+		<dependency>
 			<groupId>com.pellcorp.android</groupId>
 			<artifactId>TransactQuota</artifactId>
 			<version>${project.version}</version>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
-		
-	    <dependency>
-		    <groupId>commons-io</groupId>
-		    <artifactId>commons-io</artifactId>
-		    <version>2.3</version>
-		    <scope>test</scope>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.3</version>
+			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
 			<version>2.2.1</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android-test</artifactId>
 			<version>2.2.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.2</version>
 			<scope>test</scope>
 		</dependency>
-		
-		<dependency>
-		    <groupId>junit</groupId>
-		    <artifactId>junit</artifactId>
-		    <version>3.8.2</version>
-		    <scope>test</scope>
-		</dependency>
-		
+
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
@@ -61,25 +60,37 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
 				<version>3.1.1</version>
-				
+
 				<configuration>
 					<sdk>
-						<platform>13</platform>
+						<platform>10</platform>
 					</sdk>
-					<emulator>
-						<avd>GingerBread_223</avd>
-					</emulator>
+
 					<deleteConflictingFiles>true</deleteConflictingFiles>
 					<undeployBeforeDeploy>true</undeployBeforeDeploy>
 				</configuration>
 				<extensions>true</extensions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				
+				<dependencies>
+					<dependency>
+						<groupId>com.google.android</groupId>
+						<artifactId>android</artifactId>
+						<version>2.2.1</version>
+					</dependency>
+				</dependencies>
+				
 			</plugin>
 		</plugins>
 	</build>
