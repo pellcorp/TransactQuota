@@ -1,0 +1,3 @@
+In order to use a Public Key on the emulator, need to push the private key
+ 
+adb push TransactQuota/src/test/resources/android.pk /sdcard/android.pk
