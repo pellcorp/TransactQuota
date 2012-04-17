@@ -1,10 +1,14 @@
-This app is for users who have use the Transact ISP (previously NCABLE) in victoria.  For some reason
-Transact does not expose QuotaXML for Victorian customers (and I have emailed asking why!), so as a 
-first attempt at writing an android app, this is it.
+This app is for users who have use the Transact ISP (previously NCABLE) in victoria.  
 
-Its still really buggy, and needs more work.
+For some reason Transact does not expose QuotaXML for Victorian customers (and I 
+have emailed asking why!), so as a first attempt at writing an android app, this is it.
 
-Also because of transacts own restrictions this app will not be able to load your quota info unless
-you are using WIFI that is connected to the internet via your transact modem!
+Also because of transacts own restrictions this app will not be able to load your quota
+info unless you are using WIFI that is connected to the internet via your transact modem!
+
+TODO - I am working on a SSH Tunnel to allow communication with Transact via your local
+environment if you expose a SSH server and Squid like tunnel.
+
+
 
 
