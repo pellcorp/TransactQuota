@@ -11,15 +11,14 @@
         
         <EditTextPreference
             android:defaultValue=""
-            android:key="account.username"
+            android:key="account.password"
             android:summary="@string/password_summary"
             android:title="@string/password_title" />
     </PreferenceCategory>
     
     <PreferenceCategory android:title="@string/tunneling_settings">
         <CheckBoxPreference android:key="enable.tunnel" 
-            android:title="@string/enable_tunneling_label" 
-            android:shouldDisableView="true"/>
+            android:title="@string/enable_tunneling_label" />
         
         <EditTextPreference
             android:defaultValue=""

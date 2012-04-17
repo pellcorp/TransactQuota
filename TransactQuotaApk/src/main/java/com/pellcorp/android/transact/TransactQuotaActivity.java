@@ -22,8 +22,7 @@ import android.widget.TextView;
 
 public class TransactQuotaActivity extends Activity implements OnClickListener {
 	private static final int USAGE_TIMEOUT = 15;
-	private NetworkManagement networkManagement;
-	private Preferences preferences;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,15 +31,10 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 		Button refreshButton = (Button) findViewById(R.id.refresh_button);
 		refreshButton.setOnClickListener(this);
 
-		ConnectivityManager connectivityManager = (ConnectivityManager)
-	    		getSystemService(Context.CONNECTIVITY_SERVICE);
-		
-		networkManagement = new NetworkManagement(connectivityManager);
-		
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		
-		preferences = new Preferences(sharedPreferences);
+//		ConnectivityManager connectivityManager = (ConnectivityManager)
+//	    		getSystemService(Context.CONNECTIVITY_SERVICE);
+//		
+//		NetworkManagement networkManagement = new NetworkManagement(connectivityManager);
 	}
 	
 	@Override
@@ -50,6 +44,11 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 	}
 	
 	private void refreshUsage() {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		
+		final Preferences preferences = new Preferences(sharedPreferences);
+		
 		//if (preferences.isTunnelingEnabled()) {
 		if (preferences.getAccountUsername() != null && preferences.getAccountPassword() != null) {
 			try {
