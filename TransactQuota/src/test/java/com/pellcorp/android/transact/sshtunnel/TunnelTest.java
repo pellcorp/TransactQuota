@@ -1,4 +1,4 @@
-package com.pellcorp.android.transact;
+package com.pellcorp.android.transact.sshtunnel;
 
 import java.io.File;
 
@@ -11,16 +11,18 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.junit.Test;
 
+import com.pellcorp.android.transact.ResourceUtils;
+import com.pellcorp.android.transact.sshtunnel.SshHost;
 import com.pellcorp.android.transact.sshtunnel.Tunnel;
 import com.pellcorp.android.transact.sshtunnel.TunnelConfig;
 
-public class SshAuthenticationTest {
+public class TunnelTest {
 	@Test
 	public void test() throws Exception {
 		File privateKey = ResourceUtils.getResourceAsFile("/android.pk");
 		
 		TunnelConfig tunnelConfig = new TunnelConfig(
-				new HttpHost("127.0.0.1", 22), //tunnel
+				new SshHost("127.0.0.1", 22), //tunnel
 				new HttpHost("192.168.0.5", 3128), //proxy 
 				"developer",
 				privateKey);
@@ -29,20 +31,6 @@ public class SshAuthenticationTest {
 		HttpHost proxyHost = tunnel.connect();
 		
 		try {
-			/**
-			 * JSch jsch = new JSch();
-			jsch.addIdentity(privateKey.getAbsolutePath(), "");
-	
-			Session session = jsch.getSession("developer", "127.0.0.1", 22);
-			session.setConfig("StrictHostKeyChecking", "no");
-	
-			session.connect();
-	
-			int localPort = session.setPortForwardingL(0, "192.168.0.5", 3128);
-			 */
-			
-			System.out.println("localhost:" + proxyHost.getPort());
-	
 			HttpClient client = new DefaultHttpClient();
 			client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxyHost);
 			

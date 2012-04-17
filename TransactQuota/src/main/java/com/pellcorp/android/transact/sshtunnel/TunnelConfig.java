@@ -7,11 +7,11 @@ import org.apache.http.HttpHost;
 public class TunnelConfig {
 	private final File privateKey;
 	private final String username;
-	private final HttpHost tunnelHost;
+	private final SshHost tunnelHost;
 	private final HttpHost proxyHost;
 	
 	public TunnelConfig(
-			final HttpHost tunnelHost, 
+			final SshHost tunnelHost, 
 			final HttpHost proxyHost,  
 			final String username, 
 			final File privateKey) {
@@ -31,7 +31,7 @@ public class TunnelConfig {
 		return username;
 	}
 	
-	public HttpHost getTunnelHost() {
+	public SshHost getTunnelHost() {
 		return tunnelHost;
 	}
 	

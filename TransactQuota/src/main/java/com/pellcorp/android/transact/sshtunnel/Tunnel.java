@@ -36,7 +36,7 @@ public class Tunnel {
 				tunnelConfig.getProxyHost().getHostName(), 
 				tunnelConfig.getProxyHost().getPort());
 		
-		return new HttpHost("127.0.0.1", port);
+		return new HttpHost("localhost", port);
 	}
 	
 	public void disconnect() {
