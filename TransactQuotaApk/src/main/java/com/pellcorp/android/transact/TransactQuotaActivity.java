@@ -55,7 +55,8 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 				DownloadResult<Usage> usage = new DownloadTask<Usage>(this) {
 					@Override
 					protected Usage doTask(String username, String password) {
-						TransactQuota quota = new TransactQuota(preferences.getTunnelConfig(), 
+						TransactQuota quota = new TransactQuota(
+								preferences.getTunnelConfig(), 
 								username, password);
 						return quota.getUsage();
 					}

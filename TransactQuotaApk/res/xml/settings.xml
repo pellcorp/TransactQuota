@@ -30,8 +30,7 @@
             android:defaultValue="22"
             android:key="ssh.proxy.port"
             android:summary=""
-            android:title="@string/ssh_proxy_port"
-            android:inputType="number" />
+            android:title="@string/ssh_proxy_port" />
         
         <EditTextPreference
             android:defaultValue=""
@@ -55,8 +54,7 @@
             android:defaultValue="3128"
             android:key="proxy.port"
             android:summary=""
-            android:title="@string/proxy_port"
-            android:inputType="number" />
+            android:title="@string/proxy_port" />
         
     </PreferenceCategory>
 

@@ -5,11 +5,14 @@ import java.io.File;
 import org.apache.http.HttpHost;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.pellcorp.android.transact.sshtunnel.SshHost;
 import com.pellcorp.android.transact.sshtunnel.TunnelConfig;
 
 public class Preferences {
+	private static final String TAG = "TransactQuota.Preferences";
+	
 	public enum Key {
 		ACCOUNT_USERNAME("account.username"), 
 		ACCOUNT_PASSWORD("account.password"),
@@ -115,13 +118,20 @@ public class Preferences {
 	private File getFileValue(Key key) {
 		String value = sharedPreferences.getString(key.getKey(), null);
 		if (value != null) {
-			return new File(value);
+			File file = new File(value);
+			return file;
 		} else {
 			return null;
 		}
 	}
 	
 	private int getIntegerValue(Key key, int defaultValue) {
-		return sharedPreferences.getInt(key.getKey(), defaultValue);
+		try {
+			return sharedPreferences.getInt(key.getKey(), defaultValue);
+		} catch (Exception e) {
+			Log.e(TAG, "Failed to load integer! " + key.getKey() 
+					+ " = " + getStringValue(key), e);
+			return defaultValue;
+		}
 	}
 }
