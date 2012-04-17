@@ -20,12 +20,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.pellcorp.android.transact.sshtunnel.TunnelConfig;
-
 public class TransactQuotaActivity extends Activity implements OnClickListener {
 	private static final int USAGE_TIMEOUT = 15;
 	private NetworkManagement networkManagement;
-	
+	private Preferences preferences;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,6 +36,11 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 	    		getSystemService(Context.CONNECTIVITY_SERVICE);
 		
 		networkManagement = new NetworkManagement(connectivityManager);
+		
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		
+		preferences = new Preferences(sharedPreferences);
 	}
 	
 	@Override
@@ -47,20 +50,14 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 	}
 	
 	private void refreshUsage() {
-		if (networkManagement.isWifiConnected()) {
-			SharedPreferences sharedPreferences = PreferenceManager
-					.getDefaultSharedPreferences(TransactQuotaActivity.this);
-			
-			Preferences preferences = new Preferences(sharedPreferences);
-
+		if (networkManagement.isWifiConnected() || preferences.isTunnelingEnabled()) {
 			if (preferences.getAccountUsername() != null && preferences.getAccountPassword() != null) {
 				try {
-					final TunnelConfig tunnelConfig = preferences.getTunnelConfig();
-					
 					DownloadResult<Usage> usage = new DownloadTask<Usage>(this) {
 						@Override
 						protected Usage doTask(String username, String password) {
-							TransactQuota quota = new TransactQuota(tunnelConfig, username, password);
+							TransactQuota quota = new TransactQuota(preferences.getTunnelConfig(), 
+									username, password);
 							return quota.getUsage();
 						}
 					}.execute(preferences.getAccountUsername(), preferences.getAccountPassword())

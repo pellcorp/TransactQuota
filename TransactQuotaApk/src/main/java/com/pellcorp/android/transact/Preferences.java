@@ -40,10 +40,12 @@ public class Preferences {
 		this.sharedPreferences = SharedPreferences;
 	}
 	
+	public boolean isTunnelingEnabled() {
+		return getBooleanValue(Key.ENABLE_TUNNELING);
+	}
 	
 	public TunnelConfig getTunnelConfig() {
-		boolean isTunnelingEnabled = getBooleanValue(Key.ENABLE_TUNNELING);
-		if (isTunnelingEnabled) {
+		if (isTunnelingEnabled()) {
 			SshHost sshHost = getSshHost();
 			HttpHost proxyHost = getProxyHost();
 			String sshUsername = getSshUsername();
