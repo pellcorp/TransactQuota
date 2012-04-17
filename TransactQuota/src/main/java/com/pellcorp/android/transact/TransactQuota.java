@@ -48,7 +48,7 @@ public class TransactQuota {
 		this.tunnelConfig = tunnelConfig;
 	}
 	
-	public Usage getUsage() {
+	public Usage getUsage() throws IOException {
 		Tunnel tunnel = null;
 		
 		try {
@@ -65,6 +65,8 @@ public class TransactQuota {
 			
 			String formKey = doGetLogin(localContext);
         	return doSubmit(formKey, localContext);
+		} catch(IOException ioe) {
+			throw ioe;
 		} catch(InvalidCredentialsException e) {
 			throw e;
         } catch(Exception e) {

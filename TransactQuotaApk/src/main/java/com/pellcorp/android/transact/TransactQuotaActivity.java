@@ -1,15 +1,14 @@
 package com.pellcorp.android.transact;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -54,7 +53,7 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 			try {
 				DownloadResult<Usage> usage = new DownloadTask<Usage>(this) {
 					@Override
-					protected Usage doTask(String username, String password) {
+					protected Usage doTask(String username, String password) throws IOException {
 						TransactQuota quota = new TransactQuota(
 								preferences.getTunnelConfig(), 
 								username, password);

@@ -1,10 +1,15 @@
 package com.pellcorp.android.transact;
 
+import java.io.IOException;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 public abstract class DownloadTask<Result> extends AsyncTask<String, Void, DownloadResult<Result>> {
+	private static final String TAG = DownloadTask.class.getName();
+	
 	private final ProgressDialog dialog;
 	private final Context context;
 	
@@ -29,10 +34,13 @@ public abstract class DownloadTask<Result> extends AsyncTask<String, Void, Downl
 			return new DownloadResult<Result>(true);
 		} catch (UsageNotAvailableException e) {
 			return new DownloadResult<Result>(e.getMessage());
+		} catch (IOException e) {
+			Log.e(TAG, "Connectivity Exception", e);
+			return new DownloadResult<Result>(e.getMessage());
 		}
 	}
 	
-	protected abstract Result doTask(String username, String password);
+	protected abstract Result doTask(String username, String password) throws IOException;
 
 	protected void onPostExecute(DownloadResult<Result> result) {
 		if (dialog.isShowing()) {

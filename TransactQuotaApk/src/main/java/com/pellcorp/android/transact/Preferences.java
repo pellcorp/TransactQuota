@@ -11,7 +11,7 @@ import com.pellcorp.android.transact.sshtunnel.SshHost;
 import com.pellcorp.android.transact.sshtunnel.TunnelConfig;
 
 public class Preferences {
-	private static final String TAG = "TransactQuota.Preferences";
+	private static final String TAG = Preferences.class.getName();
 	
 	public enum Key {
 		ACCOUNT_USERNAME("account.username"), 
@@ -126,11 +126,15 @@ public class Preferences {
 	}
 	
 	private int getIntegerValue(Key key, int defaultValue) {
+		String value = getStringValue(key);
+		
 		try {
-			return sharedPreferences.getInt(key.getKey(), defaultValue);
+			// FIXME - why are the preferences not loaded as numeric?!!
+			return Integer.valueOf(value);
+			//return sharedPreferences.getInt(key.getKey(), defaultValue);
 		} catch (Exception e) {
 			Log.e(TAG, "Failed to load integer! " + key.getKey() 
-					+ " = " + getStringValue(key), e);
+					+ " = [" + value + "]", e);
 			return defaultValue;
 		}
 	}
