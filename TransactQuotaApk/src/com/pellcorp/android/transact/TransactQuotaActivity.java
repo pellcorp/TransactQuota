@@ -136,7 +136,7 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.settings:
-			startActivity(new Intent(this, Prefs.class));
+			startActivity(new Intent(this, PrefsActivity.class));
 			return true;
 		}
 		return false;
@@ -173,7 +173,7 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								startActivity(new Intent(
-										TransactQuotaActivity.this, Prefs.class));
+										TransactQuotaActivity.this, PrefsActivity.class));
 							}
 						});
 		return builder.create();

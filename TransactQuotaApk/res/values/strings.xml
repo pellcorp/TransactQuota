@@ -6,9 +6,9 @@
     <string name="settings_title">Transact Account Details</string>
     <string name="settings_shortcut">s</string>
     <string name="username_title">Username</string>
-    <string name="username_summary">Please provide your Transact Username</string>
+    <string name="username_summary">Transact Username</string>
     <string name="password_title">Password</string>
-    <string name="password_summary">Please provide your Transact Password</string>
+    <string name="password_summary">Transact Password</string>
     <string name="peak_usage">Peak Usage (GB)</string>
     <string name="offpeak_usage">Off Peak Usage (GB)</string>
     <string name="refresh_label">Refresh</string>
@@ -17,6 +17,7 @@
     <string name="invalid_account_details">Account Details are incorrect</string>
     <string name="loading_usage">Loading Usage ...</string>
     <string name="wifi_not_enabled">Current Network connection is not wifi!</string>
-    <string />
+    <string name="authentication_settings">Authentication</string>
+    <string name="tunneling_settings">Tunnelling</string>
     
 </resources>

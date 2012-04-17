@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <EditTextPreference android:key="username"
-		android:title="@string/username_title" android:summary="@string/username_summary"
-		android:defaultValue="" />
-    <EditTextPreference android:key="password"
-		android:title="@string/password_title" android:summary="@string/password_summary"
-		android:defaultValue="" />
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:orderingFromXml="true">
+
+    <PreferenceCategory android:title="@string/authentication_settings">
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="username"
+            android:summary="@string/username_summary"
+            android:title="@string/username_title" />
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="password"
+            android:summary="@string/password_summary"
+            android:title="@string/password_title" />
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="@string/tunneling_settings">
+        <Preference />
+    </PreferenceCategory>
+
 </PreferenceScreen>
