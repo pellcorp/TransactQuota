@@ -77,12 +77,27 @@
 					<undeployBeforeDeploy>true</undeployBeforeDeploy>
 				</configuration>
 				<extensions>true</extensions>
+				
+				<executions>
+					<execution>
+						<id>update-manifest</id>
+						<goals>
+							<goal>manifest-update</goal>
+						</goals>
+						<configuration>
+							<manifest>
+								<versionName>${project.version}</versionName>
+								<versionCode>0</versionCode>
+							</manifest>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				
+
 				<dependencies>
 					<dependency>
 						<groupId>com.google.android</groupId>
@@ -90,7 +105,6 @@
 						<version>2.2.1</version>
 					</dependency>
 				</dependencies>
-				
 			</plugin>
 		</plugins>
 	</build>
