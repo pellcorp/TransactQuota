@@ -30,7 +30,7 @@ import com.pellcorp.android.transact.sshtunnel.TunnelConfig;
 public class TransactQuota {
 	private static final String USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:11.0) Gecko/20100101 Firefox/11.0"; 
 	
-	private static final String URL = "https://portal.vic.transactSSSS.com.au/portal/default/user/login?_next=/portal/default/index";
+	private static final String URL = "https://portal.vic.transact.com.au/portal/default/user/login?_next=/portal/default/index";
 	
 	private final TunnelConfig tunnelConfig;
 	private HttpClient client;
