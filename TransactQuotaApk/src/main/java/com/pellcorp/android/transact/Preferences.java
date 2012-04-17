@@ -13,6 +13,8 @@ public class Preferences {
 	public enum Key {
 		ACCOUNT_USERNAME("account.username"), 
 		ACCOUNT_PASSWORD("account.password"),
+		
+		ENABLE_TUNNELING("enable.tunnel"), 
 		SSH_PROXY_HOST("ssh.proxy.host"),
 		SSH_PROXY_PORT("ssh.proxy.port"),
 		SSH_USERNAME("ssh.username"),
@@ -38,22 +40,25 @@ public class Preferences {
 		this.sharedPreferences = SharedPreferences;
 	}
 	
+	
 	public TunnelConfig getTunnelConfig() {
-		SshHost sshHost = getSshHost();
-		HttpHost proxyHost = getProxyHost();
-		String sshUsername = getSshUsername();
-		File sshPubKey = getSshKey();
-		//String sshPassword = getSshPassword();
-		
-		if (sshHost != null && proxyHost != null && sshUsername != null && sshPubKey != null) {
-			return new TunnelConfig(
-				sshHost, //tunnel
-				proxyHost, //proxy 
-				sshUsername,
-				sshPubKey);
-		} else {
-			return null;
+		boolean isTunnelingEnabled = getBooleanValue(Key.ENABLE_TUNNELING);
+		if (isTunnelingEnabled) {
+			SshHost sshHost = getSshHost();
+			HttpHost proxyHost = getProxyHost();
+			String sshUsername = getSshUsername();
+			File sshPubKey = getSshKey();
+			//String sshPassword = getSshPassword();
+			
+			if (sshHost != null && proxyHost != null && sshUsername != null && sshPubKey != null) {
+				return new TunnelConfig(
+					sshHost, //tunnel
+					proxyHost, //proxy 
+					sshUsername,
+					sshPubKey);
+			}
 		}
+		return null;
 	}
 	
 	private SshHost getSshHost() {
@@ -95,6 +100,10 @@ public class Preferences {
 	
 	public String getAccountPassword() {
 		return getStringValue(Key.ACCOUNT_PASSWORD);
+	}
+	
+	private boolean getBooleanValue(Key key) {
+		return sharedPreferences.getBoolean(key.getKey(), false);
 	}
 	
 	private String getStringValue(Key key) {

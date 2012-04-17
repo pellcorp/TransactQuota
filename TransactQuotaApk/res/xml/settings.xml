@@ -8,6 +8,7 @@
             android:key="account.username"
             android:summary="@string/username_summary"
             android:title="@string/username_title" />
+        
         <EditTextPreference
             android:defaultValue=""
             android:key="account.username"
@@ -16,16 +17,46 @@
     </PreferenceCategory>
     
     <PreferenceCategory android:title="@string/tunneling_settings">
+        <CheckBoxPreference android:key="enable.tunnel" 
+            android:title="@string/enable_tunneling_label" 
+            android:shouldDisableView="true"/>
+        
         <EditTextPreference
             android:defaultValue=""
-            android:key="account.username"
-            android:summary="@string/username_summary"
-            android:title="@string/username_title" />
+            android:key="ssh.proxy.host"
+            android:summary=""
+            android:title="@string/ssh_proxy_host" />
+        
+        <EditTextPreference
+            android:defaultValue="22"
+            android:key="ssh.proxy.port"
+            android:summary=""
+            android:title="@string/ssh_proxy_port" />
+        
         <EditTextPreference
             android:defaultValue=""
-            android:key="account.username"
-            android:summary="@string/password_summary"
-            android:title="@string/password_title" />
+            android:key="ssh.username"
+            android:summary=""
+            android:title="@string/ssh_username" />
+        
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="ssh.pubkey"
+            android:summary=""
+            android:title="@string/ssh_pubkey" />
+        
+        <EditTextPreference
+            android:defaultValue="localhost"
+            android:key="proxy.host"
+            android:summary=""
+            android:title="@string/proxy_host" />
+        
+        <EditTextPreference
+            android:defaultValue="3128"
+            android:key="proxy.port"
+            android:summary=""
+            android:title="@string/proxy_port" />
+        
     </PreferenceCategory>
 
 </PreferenceScreen>

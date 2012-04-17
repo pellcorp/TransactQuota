@@ -30,7 +30,7 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
+		
 		Button refreshButton = (Button) findViewById(R.id.refresh_button);
 		refreshButton.setOnClickListener(this);
 
@@ -38,10 +38,14 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 	    		getSystemService(Context.CONNECTIVITY_SERVICE);
 		
 		networkManagement = new NetworkManagement(connectivityManager);
-		
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
 		refreshUsage();
 	}
-
+	
 	private void refreshUsage() {
 		if (networkManagement.isWifiConnected()) {
 			SharedPreferences sharedPreferences = PreferenceManager
