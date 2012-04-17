@@ -87,7 +87,7 @@
 						<configuration>
 							<manifest>
 								<versionName>${project.version}</versionName>
-								<versionCode>0</versionCode>
+            					<versionCodeUpdateFromVersion>true</versionCodeUpdateFromVersion>
 							</manifest>
 						</configuration>
 					</execution>

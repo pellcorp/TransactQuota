@@ -20,6 +20,33 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.0</version>
+				<configuration>
+					<doUpdate>false</doUpdate>
+					<doCheck>false</doCheck>
+					<revisionOnScmFailure>${project.version}</revisionOnScmFailure>
+					<getRevisionOnlyOnce>true</getRevisionOnlyOnce>
+					<timestampFormat>{0,date,dd/MM/yyyy HH:mm:ss}</timestampFormat>
+					<timestampPropertyName>buildTimestamp</timestampPropertyName>
+				</configuration>
+
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
+	
+	<scm>
+		<developerConnection>scm:git:http://github.com/pellcorp/TransactQuota</developerConnection>
+	</scm>
 </project>
