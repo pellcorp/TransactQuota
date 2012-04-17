@@ -19,9 +19,7 @@ public class Preferences {
 		SSH_PROXY_PORT("ssh.proxy.port"),
 		SSH_USERNAME("ssh.username"),
 		SSH_PASSWORD("ssh.password"),
-		SSH_PUB_KEY("ssh.pubkey"),
-		HTTP_PROXY_HOST("proxy.host"),
-		HTTP_PROXY_PORT("proxy.port");
+		SSH_PUB_KEY("ssh.pubkey");
 		
 		private String key;
 		
@@ -47,15 +45,13 @@ public class Preferences {
 	public TunnelConfig getTunnelConfig() {
 		if (isTunnelingEnabled()) {
 			SshHost sshHost = getSshHost();
-			HttpHost proxyHost = getProxyHost();
 			String sshUsername = getSshUsername();
 			File sshPubKey = getSshKey();
 			//String sshPassword = getSshPassword();
 			
-			if (sshHost != null && proxyHost != null && sshUsername != null && sshPubKey != null) {
+			if (sshHost != null && sshUsername != null && sshPubKey != null) {
 				return new TunnelConfig(
 					sshHost, //tunnel
-					proxyHost, //proxy 
 					sshUsername,
 					sshPubKey);
 			}
@@ -84,16 +80,6 @@ public class Preferences {
 	
 	private File getSshKey() {
 		return getFileValue(Key.SSH_PUB_KEY);
-	}
-	
-	private HttpHost getProxyHost() {
-		String proxyHost = getStringValue(Key.HTTP_PROXY_HOST);
-		int proxyPort = getIntegerValue(Key.HTTP_PROXY_PORT, 3128);
-		if (proxyHost != null) {
-			return new HttpHost(proxyHost, proxyPort);
-		} else {
-			return null;
-		}
 	}
 	
 	public String getAccountUsername() {

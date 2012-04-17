@@ -1,6 +1,14 @@
 package com.pellcorp.android.transact;
 
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -11,10 +19,15 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.AllClientPNames;
 import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -30,7 +43,8 @@ import com.pellcorp.android.transact.sshtunnel.TunnelConfig;
 public class TransactQuota {
 	private static final String USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:11.0) Gecko/20100101 Firefox/11.0"; 
 	
-	private static final String URL = "https://portal.vic.transact.com.au/portal/default/user/login?_next=/portal/default/index";
+	private static final String URL = "https://${HOST_PORT}/portal/default/user/login?_next=/portal/default/index";
+	private static final String TRANSACT_PORTAL_HOST = "portal.vic.transact.com.au";
 	
 	private final TunnelConfig tunnelConfig;
 	private HttpClient client;
@@ -52,19 +66,21 @@ public class TransactQuota {
 		Tunnel tunnel = null;
 		
 		try {
+			String url = URL.replace("${HOST_PORT}", TRANSACT_PORTAL_HOST);
 			client = createClient();
 			if (tunnelConfig != null) {
 				tunnel = new Tunnel(tunnelConfig);
-				HttpHost proxy = tunnel.connect();
-				client.getParams().setParameter(AllClientPNames.DEFAULT_PROXY, proxy);
+				HttpHost proxy = tunnel.connect(new HttpHost(TRANSACT_PORTAL_HOST, 443));
+				//client.getParams().setParameter(AllClientPNames.DEFAULT_PROXY, proxy);
+				url  = URL.replace("${HOST_PORT}", proxy.getHostName() + ":" + proxy.getPort());
 			}
 			
 			CookieStore cookieStore = new BasicCookieStore();
 			HttpContext localContext = new BasicHttpContext();
 			localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 			
-			String formKey = doGetLogin(localContext);
-        	return doSubmit(formKey, localContext);
+			String formKey = doGetLogin(url, localContext);
+        	return doSubmit(url, formKey, localContext);
 		} catch(IOException ioe) {
 			throw ioe;
 		} catch(InvalidCredentialsException e) {
@@ -82,12 +98,51 @@ public class TransactQuota {
         	}
         }
 	}
-
-	private HttpClient createClient() throws JSchException {
+	
+	private HttpClient createClient() throws JSchException, KeyManagementException, NoSuchAlgorithmException {
 		int timeoutConnection = 3000;
 		int timeoutSocket = 5000;
+		
+		TrustManager easyTrustManager = new X509TrustManager() {
 
-		HttpClient httpClient = new DefaultHttpClient();
+		    @Override
+		    public void checkClientTrusted(
+		            X509Certificate[] chain,
+		            String authType) throws CertificateException {
+		        // Oh, I am easy!
+		    }
+
+		    @Override
+		    public void checkServerTrusted(
+		            X509Certificate[] chain,
+		            String authType) throws CertificateException {
+		        // Oh, I am easy!
+		    }
+
+		    @Override
+		    public X509Certificate[] getAcceptedIssuers() {
+		        return null;
+		    }
+		    
+		};
+
+		SSLContext sslcontext = SSLContext.getInstance("TLS");
+		sslcontext.init(null, new TrustManager[] { easyTrustManager }, null);
+
+		SSLSocketFactory sf = new SSLSocketFactory(sslcontext, 
+				SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER); 
+		
+		Scheme http = new Scheme("http", 80, PlainSocketFactory.getSocketFactory());
+
+		Scheme https = new Scheme("https", 443, sf);
+
+		SchemeRegistry sr = new SchemeRegistry();
+		sr.register(http);
+		sr.register(https);
+		
+		SingleClientConnManager connManager = new SingleClientConnManager(sr);
+		
+		HttpClient httpClient =  new DefaultHttpClient(connManager);
 		
 		HttpParams params = httpClient.getParams();
 		params.setIntParameter(AllClientPNames.CONNECTION_TIMEOUT, timeoutConnection);
@@ -97,9 +152,9 @@ public class TransactQuota {
 		return httpClient;
 	}
 
-	private String doGetLogin(HttpContext localContext) throws IOException,
+	private String doGetLogin(String url, HttpContext localContext) throws IOException,
 			ClientProtocolException {
-		HttpGet get = new HttpGet(URL);
+		HttpGet get = new HttpGet(url);
 		HttpResponse response = client.execute(get, localContext);
 		String html = EntityUtils.toString(response.getEntity());
 		Document doc = Jsoup.parse(html, URL);
@@ -107,7 +162,7 @@ public class TransactQuota {
     	return elements.first().attr("value");
 	}
 	
-	private Usage doSubmit(String formKey, HttpContext localContext) throws Exception {
+	private Usage doSubmit(String url, String formKey, HttpContext localContext) throws Exception {
 		MultipartEntity entity = new MultipartEntity();
 		entity.addPart("uname", new StringBody(username));
 		entity.addPart("passwd", new StringBody(password));
@@ -115,7 +170,7 @@ public class TransactQuota {
 		entity.addPart("_formkey", new StringBody(formKey));
 		entity.addPart("_formname", new StringBody("login"));
 
-		HttpPost post = new HttpPost(URL);
+		HttpPost post = new HttpPost(url);
 		post.setEntity(entity);
 		
 		HttpResponse response = client.execute(post, localContext);

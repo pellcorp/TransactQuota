@@ -1,13 +1,23 @@
 package com.pellcorp.android.transact.sshtunnel;
 
 import java.io.File;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.util.EntityUtils;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -16,21 +26,77 @@ import org.junit.Test;
 import com.pellcorp.android.transact.ResourceUtils;
 
 /**
- * Note this is not going to work on your host, unless you append the android.pk.pub
- * to your .ssh/authorized_keys2 file
+ * Note this is not going to work on your host, unless you append the
+ * android.pk.pub to your .ssh/authorized_keys2 file
  */
 public class TunnelTest {
 	private TunnelConfig tunnelConfig;
-	
+	private File privateKey;
+
 	@Before
 	public void setUp() throws Exception {
-		File privateKey = ResourceUtils.getResourceAsFile("/android.pk");
+		privateKey = ResourceUtils.getResourceAsFile("/android.pk");
+
+		tunnelConfig = new TunnelConfig(new SshHost("192.168.79.160", 22), // tunnel
+				"developer", privateKey);
+	}
+
+	@Test
+	@Ignore
+	public void testTunnelToTransact() throws Exception {
+		tunnelConfig = new TunnelConfig(new SshHost("192.168.79.160", 22), // tunnel
+				//new HttpHost("portal.vic.transact.com.au", 443), // proxy
+				"developer", privateKey);
 		
-		tunnelConfig = new TunnelConfig(
-				new SshHost("192.168.79.156", 22), //tunnel
-				new HttpHost("192.168.0.5", 3128), //proxy 
-				"developer",
-				privateKey);
+		TrustManager easyTrustManager = new X509TrustManager() {
+
+		    @Override
+		    public void checkClientTrusted(
+		            X509Certificate[] chain,
+		            String authType) throws CertificateException {
+		        // Oh, I am easy!
+		    }
+
+		    @Override
+		    public void checkServerTrusted(
+		            X509Certificate[] chain,
+		            String authType) throws CertificateException {
+		        // Oh, I am easy!
+		    }
+
+		    @Override
+		    public X509Certificate[] getAcceptedIssuers() {
+		        return null;
+		    }
+		    
+		};
+
+		SSLContext sslcontext = SSLContext.getInstance("TLS");
+		sslcontext.init(null, new TrustManager[] { easyTrustManager }, null);
+
+		SSLSocketFactory sf = new SSLSocketFactory(sslcontext, 
+				SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER); 
+		
+		Scheme http = new Scheme("http", 80, PlainSocketFactory.getSocketFactory());
+
+		Scheme https = new Scheme("https", 443, sf);
+
+		SchemeRegistry sr = new SchemeRegistry();
+		sr.register(http);
+		sr.register(https);
+		
+		SingleClientConnManager connManager = new SingleClientConnManager(sr);
+		
+		Tunnel tunnel = new Tunnel(tunnelConfig);
+		HttpHost proxyHost = tunnel.connect(new HttpHost("portal.vic.transact.com.au", 443));
+
+		HttpClient client = new DefaultHttpClient(connManager);
+
+		HttpGet get = new HttpGet("https://localhost:" + proxyHost.getPort()
+				+ "/portal/default/user/login?_next=/portal/default/index");
+		HttpResponse response = client.execute(get);
+		String html = EntityUtils.toString(response.getEntity());
+		System.out.println(html);
 	}
 	
 	@Test
@@ -39,18 +105,17 @@ public class TunnelTest {
 		Shell shell = new Shell(tunnelConfig);
 		System.out.println(shell.getShellLoginMessage());
 	}
-	
+
 	@Test
 	@Ignore
 	public void testTunnel() throws Exception {
 		Tunnel tunnel = new Tunnel(tunnelConfig);
-		HttpHost proxyHost = tunnel.connect();
-		
+		HttpHost proxyHost = tunnel.connect(new HttpHost("google.com", 80));
+
 		try {
 			HttpClient client = new DefaultHttpClient();
-			client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxyHost);
-			
-			HttpGet get = new HttpGet("http://google.com");
+
+			HttpGet get = new HttpGet("http://localhost:" + proxyHost.getPort());
 			HttpResponse response = client.execute(get);
 			String html = EntityUtils.toString(response.getEntity());
 			System.out.println(html);

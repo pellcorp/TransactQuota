@@ -17,13 +17,13 @@ public class Tunnel {
 		jsch.addIdentity(tunnelConfig.getPrivateKey().getAbsolutePath(), "");
 	}
 	
-	public HttpHost connect() throws JSchException {
+	public HttpHost connect(HttpHost portForward) throws JSchException {
 		init();
 
 		int port = session.setPortForwardingL(
 				0, // Auto assign a local port 
-				tunnelConfig.getProxyHost().getHostName(), 
-				tunnelConfig.getProxyHost().getPort());
+				portForward.getHostName(), 
+				portForward.getPort());
 		
 		return new HttpHost("localhost", port);
 	}

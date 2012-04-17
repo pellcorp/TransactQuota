@@ -2,8 +2,6 @@ package com.pellcorp.android.transact;
 
 import java.io.File;
 
-import org.apache.http.HttpHost;
-
 import com.pellcorp.android.transact.sshtunnel.SshHost;
 import com.pellcorp.android.transact.sshtunnel.TunnelConfig;
 
@@ -15,11 +13,10 @@ public class TransactQuotaRunner {
 			
 			TunnelConfig tunnelConfig = new TunnelConfig(
 					new SshHost("127.0.0.1", 22), //tunnel
-					new HttpHost("192.168.0.5", 3128), //proxy 
 					"developer",
 					privateKey);
 			
-			TransactQuota quota = new TransactQuota(null, args[0], args[1]);
+			TransactQuota quota = new TransactQuota(tunnelConfig, args[0], args[1]);
 			Usage usage = quota.getUsage();
 			
 			System.out.println("Peak Usage: " + usage.getPeakUsage());
