@@ -5,14 +5,11 @@ import java.io.File;
 import org.apache.http.HttpHost;
 
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.pellcorp.android.transact.sshtunnel.SshHost;
 import com.pellcorp.android.transact.sshtunnel.TunnelConfig;
 
 public class Preferences {
-	private static final String TAG = Preferences.class.getName();
-	
 	public enum Key {
 		ACCOUNT_USERNAME("account.username"), 
 		ACCOUNT_PASSWORD("account.password"),
@@ -133,8 +130,8 @@ public class Preferences {
 			return Integer.valueOf(value);
 			//return sharedPreferences.getInt(key.getKey(), defaultValue);
 		} catch (Exception e) {
-			Log.e(TAG, "Failed to load integer! " + key.getKey() 
-					+ " = [" + value + "]", e);
+			//Log.e(TAG, "Failed to load integer! " + key.getKey() 
+			//		+ " = [" + value + "]", e);
 			return defaultValue;
 		}
 	}
