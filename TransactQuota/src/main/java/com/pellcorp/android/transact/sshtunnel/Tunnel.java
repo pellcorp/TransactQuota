@@ -1,4 +1,4 @@
-package com.pellcorp.android.transact.ssltunnel;
+package com.pellcorp.android.transact.sshtunnel;
 
 import org.apache.http.HttpHost;
 
