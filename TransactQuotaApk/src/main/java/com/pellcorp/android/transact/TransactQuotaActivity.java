@@ -60,7 +60,7 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 						return quota.getUsage();
 					}
 				}.execute(preferences.getAccountUsername(), preferences.getAccountPassword())
-				.get(USAGE_TIMEOUT, TimeUnit.SECONDS);
+				.get();
 				
 				if (usage.getResult() != null) {
 					TextView peakUsage = (TextView) findViewById(R.id.PeakUsage);
