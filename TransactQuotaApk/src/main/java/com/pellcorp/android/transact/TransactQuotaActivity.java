@@ -50,44 +50,44 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 	}
 	
 	private void refreshUsage() {
-		if (networkManagement.isWifiConnected() || preferences.isTunnelingEnabled()) {
-			if (preferences.getAccountUsername() != null && preferences.getAccountPassword() != null) {
-				try {
-					DownloadResult<Usage> usage = new DownloadTask<Usage>(this) {
-						@Override
-						protected Usage doTask(String username, String password) {
-							TransactQuota quota = new TransactQuota(preferences.getTunnelConfig(), 
-									username, password);
-							return quota.getUsage();
-						}
-					}.execute(preferences.getAccountUsername(), preferences.getAccountPassword())
-					.get(USAGE_TIMEOUT, TimeUnit.SECONDS);
-					
-					if (usage.getResult() != null) {
-						TextView peakUsage = (TextView) findViewById(R.id.PeakUsage);
-						TextView offPeakUsage = (TextView) findViewById(R.id.OffPeakUsage);
-						
-						peakUsage.setText(usage.getResult().getPeakUsage().toString());
-						offPeakUsage.setText(usage.getResult().getOffPeakUsage().toString());
-					} else if (usage.isInvalidCredentials()) {
-						Dialog dialog = createSettingsMissingDialog(getString(R.string.invalid_account_details));
-						dialog.show();
-					} else {
-						AlertDialog dialog = createErrorDialog(usage.getErrorMessage());
-						dialog.show();
+		//if (preferences.isTunnelingEnabled()) {
+		if (preferences.getAccountUsername() != null && preferences.getAccountPassword() != null) {
+			try {
+				DownloadResult<Usage> usage = new DownloadTask<Usage>(this) {
+					@Override
+					protected Usage doTask(String username, String password) {
+						TransactQuota quota = new TransactQuota(preferences.getTunnelConfig(), 
+								username, password);
+						return quota.getUsage();
 					}
-				} catch(Exception e) {
-					AlertDialog dialog = createErrorDialog(e.getMessage());
+				}.execute(preferences.getAccountUsername(), preferences.getAccountPassword())
+				.get(USAGE_TIMEOUT, TimeUnit.SECONDS);
+				
+				if (usage.getResult() != null) {
+					TextView peakUsage = (TextView) findViewById(R.id.PeakUsage);
+					TextView offPeakUsage = (TextView) findViewById(R.id.OffPeakUsage);
+					
+					peakUsage.setText(usage.getResult().getPeakUsage().toString());
+					offPeakUsage.setText(usage.getResult().getOffPeakUsage().toString());
+				} else if (usage.isInvalidCredentials()) {
+					Dialog dialog = createSettingsMissingDialog(getString(R.string.invalid_account_details));
+					dialog.show();
+				} else {
+					AlertDialog dialog = createErrorDialog(usage.getErrorMessage());
 					dialog.show();
 				}
-			} else {
-				Dialog dialog = createSettingsMissingDialog(getString(R.string.settings_missing_label));
+			} catch(Exception e) {
+				AlertDialog dialog = createErrorDialog(e.getMessage());
 				dialog.show();
 			}
 		} else {
-			Dialog dialog = createSettingsMissingDialog(getString(R.string.wifi_not_enabled));
+			Dialog dialog = createSettingsMissingDialog(getString(R.string.settings_missing_label));
 			dialog.show();
 		}
+//		} else {
+//			Dialog dialog = createSettingsMissingDialog(getString(R.string.wifi_not_enabled));
+//			dialog.show();
+//		}
 	}
 
 	@Override
