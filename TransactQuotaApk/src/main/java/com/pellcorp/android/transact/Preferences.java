@@ -2,8 +2,6 @@ package com.pellcorp.android.transact;
 
 import java.io.File;
 
-import org.apache.http.HttpHost;
-
 import android.content.SharedPreferences;
 
 import com.pellcorp.android.transact.sshtunnel.SshHost;
