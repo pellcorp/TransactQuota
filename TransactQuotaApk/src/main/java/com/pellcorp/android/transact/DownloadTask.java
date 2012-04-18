@@ -40,10 +40,13 @@ public abstract class DownloadTask<Result> extends AsyncTask<Void, Void, Downloa
 		} catch (IOException e) {
 			Log.e(TAG, "Connectivity Exception", e);
 			return new DownloadResult<Result>(e.getMessage());
+		} catch (Exception e) {
+			Log.e(TAG, "Unknown Exception", e);
+			return new DownloadResult<Result>(e.getMessage());
 		}
 	}
 	
-	protected abstract Result doTask() throws IOException;
+	protected abstract Result doTask() throws Exception;
 	protected abstract void onFinish(DownloadResult<Result> result);
 
 	protected void onPostExecute(DownloadResult<Result> result) {

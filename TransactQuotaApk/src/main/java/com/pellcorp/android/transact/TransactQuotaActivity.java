@@ -1,6 +1,5 @@
 package com.pellcorp.android.transact;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -24,8 +23,6 @@ import android.widget.TextView;
 public class TransactQuotaActivity extends Activity implements OnClickListener {
 	private static final String TAG = "TransactQuotaActivity";
 	
-	private TransactQuota transactQuota;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,22 +40,10 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 		super.onResume();
 		
 		Log.i(TAG, "Starting onResume");
-		initTransactQuota();
-		
 		refreshUsage();
 	}
 	
-	@Override
-	public void onPause() {
-		super.onPause();
-		
-		if (transactQuota != null) {
-			transactQuota.disconnect();
-			transactQuota = null;
-		}
-	}
-
-	private void initTransactQuota() {
+	private void refreshUsage() {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
@@ -68,12 +53,9 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 		if (preferences.getAccountUsername() != null
 				&& preferences.getAccountPassword() != null) {
 			try {
-				transactQuota = new TransactQuota(
-						preferences.getTunnelConfig(),
-						preferences.getAccountUsername(),
-						preferences.getAccountPassword());
+				doUsageDownload(preferences);
 			} catch (Exception e) {
-				Log.e(TAG, "initTransactQuota", e);
+				Log.e(TAG, "refreshUsage", e);
 				AlertDialog dialog = createErrorDialog(e.getMessage());
 				dialog.show();
 			}
@@ -83,26 +65,23 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 			dialog.show();
 		}
 	}
-
-	private void refreshUsage() {
-		try {
-			if (transactQuota != null) {
-				doUsageDownload();
-			}
-		} catch (Exception e) {
-			Log.e(TAG, "refreshUsage", e);
-			AlertDialog dialog = createErrorDialog(e.getMessage());
-			dialog.show();
-		}
-	}
-
-	private void doUsageDownload() throws InterruptedException,
+	
+	private void doUsageDownload(final Preferences preferences) throws InterruptedException,
 			ExecutionException, TimeoutException {
 
 		DownloadTask<Usage> downloadTask = new DownloadTask<Usage>(this) {
 			@Override
-			protected Usage doTask() throws IOException {
-				return transactQuota.getUsage();
+			protected Usage doTask() throws Exception {
+				TransactQuota transactQuota = new TransactQuota(
+					preferences.getTunnelConfig(),
+					preferences.getAccountUsername(),
+					preferences.getAccountPassword());
+				
+				try {
+					return transactQuota.getUsage();
+				} finally {
+					transactQuota.disconnect();
+				}
 			}
 
 			@Override

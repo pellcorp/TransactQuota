@@ -23,7 +23,6 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -37,13 +36,14 @@ import com.pellcorp.android.transact.sshtunnel.Tunnel;
 import com.pellcorp.android.transact.sshtunnel.TunnelConfig;
 
 public class TransactQuota {
-	private static final String USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:11.0) Gecko/20100101 Firefox/11.0"; 
+	//private static final String USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:11.0) Gecko/20100101 Firefox/11.0"; 
 	
 	private static final String URL = "https://${HOST_PORT}/portal/default/user/login?_next=/portal/default/index";
 	private static final String TRANSACT_PORTAL_HOST = "portal.vic.transact.com.au";
 	
-	private final HttpClient client;
-	private final Tunnel tunnel;
+	private HttpClient client;
+	private Tunnel tunnel;
+	
 	private final String username;
 	private final String password;
 	private final String url;
@@ -53,21 +53,30 @@ public class TransactQuota {
 		this(null, username, password);
 	}
 
-	public TransactQuota(final TunnelConfig tunnelConfig, final String username, final String password) 
-					throws JSchException, KeyManagementException, NoSuchAlgorithmException {
+	public TransactQuota(final TunnelConfig tunnelConfig, final String username, final String password) {
 		this.username = username;
 		this.password = password;
 		
-		if (tunnelConfig != null) {
-			tunnel = new Tunnel(tunnelConfig);
-			HttpHost proxy = tunnel.connect(new HttpHost(TRANSACT_PORTAL_HOST, 443));
-			url  = URL.replace("${HOST_PORT}", proxy.getHostName() + ":" + proxy.getPort());
-		} else {
-			tunnel = null;
-			url = URL.replace("${HOST_PORT}", TRANSACT_PORTAL_HOST);
+		try {
+			if (tunnelConfig != null) {
+				tunnel = new Tunnel(tunnelConfig);
+				HttpHost proxy = tunnel.connect(new HttpHost(TRANSACT_PORTAL_HOST, 443));
+				url  = URL.replace("${HOST_PORT}", proxy.getHostName() + ":" + proxy.getPort());
+			} else {
+				tunnel = null;
+				url = URL.replace("${HOST_PORT}", TRANSACT_PORTAL_HOST);
+			}
+			
+			client = createClient();
+			
+		} catch (Throwable t) {
+			// in case of exception be sure to clean up the ssl session
+			if (tunnel != null) {
+				tunnel.disconnect();
+			}
+			
+			throw new UsageNotAvailableException(t);
 		}
-		
-		client = createClient();
 	}
 	
 	public void disconnect() {
@@ -111,7 +120,7 @@ public class TransactQuota {
 		HttpParams params = new BasicHttpParams();
 		params.setIntParameter(AllClientPNames.CONNECTION_TIMEOUT, timeoutConnection);
 		params.setIntParameter(AllClientPNames.SO_TIMEOUT, timeoutSocket);
-		params.setParameter(AllClientPNames.USER_AGENT, USER_AGENT);
+		//params.setParameter(AllClientPNames.USER_AGENT, USER_AGENT);
 		params.setIntParameter(AllClientPNames.SOCKET_BUFFER_SIZE, 8192);
 		
 		ThreadSafeClientConnManager connManager = new ThreadSafeClientConnManager(params, sr);
