@@ -15,6 +15,13 @@
 			<groupId>com.pellcorp.android</groupId>
 			<artifactId>TransactQuota</artifactId>
 			<version>${project.version}</version>
+
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.android</groupId>
+					<artifactId>android</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -77,7 +84,7 @@
 					<undeployBeforeDeploy>true</undeployBeforeDeploy>
 				</configuration>
 				<extensions>true</extensions>
-				
+
 				<executions>
 					<execution>
 						<id>update-manifest</id>
@@ -87,7 +94,8 @@
 						<configuration>
 							<manifest>
 								<versionName>${project.version}</versionName>
-            					<versionCodeUpdateFromVersion>true</versionCodeUpdateFromVersion>
+								<versionCodeUpdateFromVersion>true
+								</versionCodeUpdateFromVersion>
 							</manifest>
 						</configuration>
 					</execution>
@@ -109,7 +117,8 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>

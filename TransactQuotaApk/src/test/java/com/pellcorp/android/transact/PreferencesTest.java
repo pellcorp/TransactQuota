@@ -1,18 +1,20 @@
 package com.pellcorp.android.transact;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
 
 import junit.framework.TestCase;
-import android.content.SharedPreferences;
+
+import com.pellcorp.android.transact.android.PreferenceProvider;
 
 public class PreferencesTest extends TestCase {
 	public void testNoTunnelPreferences() {
-		SharedPreferences prefs = mock(SharedPreferences.class);
-		when(prefs.getString(Preferences.Key.ACCOUNT_PASSWORD.getKey(), null)).thenReturn("password");
-		when(prefs.getString(Preferences.Key.ACCOUNT_USERNAME.getKey(), null)).thenReturn("username");
+		PreferenceProvider prefs = mock(PreferenceProvider.class);
+		when(prefs.getString(R.string.pref_account_password)).thenReturn("password");
+		when(prefs.getString(R.string.pref_account_username)).thenReturn("username");
 
 		Preferences preferences = new Preferences(prefs);
 		
@@ -22,14 +24,14 @@ public class PreferencesTest extends TestCase {
 	}
 	
 	public void testTunnelPreferencesNoPublicKey() {
-		SharedPreferences prefs = mock(SharedPreferences.class);
-		when(prefs.getBoolean(Preferences.Key.ENABLE_TUNNELING.getKey(), false)).thenReturn(true);
-		when(prefs.getString(Preferences.Key.ACCOUNT_PASSWORD.getKey(), null)).thenReturn("password");
-		when(prefs.getString(Preferences.Key.ACCOUNT_USERNAME.getKey(), null)).thenReturn("username");
+		PreferenceProvider prefs = mock(PreferenceProvider.class);
+		when(prefs.getBoolean(R.string.pref_enable_tunnel)).thenReturn(true);
+		when(prefs.getString(R.string.pref_account_password)).thenReturn("password");
+		when(prefs.getString(R.string.pref_account_username)).thenReturn("username");
 		
-		when(prefs.getString(Preferences.Key.SSH_PROXY_HOST.getKey(), null)).thenReturn("localhost");
-		when(prefs.getInt(Preferences.Key.SSH_PROXY_PORT.getKey(), -1)).thenReturn(22);
-		when(prefs.getString(Preferences.Key.SSH_USERNAME.getKey(), null)).thenReturn("jason");
+		when(prefs.getString(R.string.pref_ssh_proxy_host)).thenReturn("localhost");
+		when(prefs.getInteger(R.string.pref_ssh_proxy_port, 22)).thenReturn(22);
+		when(prefs.getString(R.string.pref_ssh_username)).thenReturn("jason");
 		
 		Preferences preferences = new Preferences(prefs);
 		
@@ -39,7 +41,7 @@ public class PreferencesTest extends TestCase {
 	}
 	
 	public void testTunnelPreferences() throws Exception {
-		SharedPreferences prefs = createAllPreferences(true);
+		PreferenceProvider prefs = mock(PreferenceProvider.class);
 		
 		Preferences preferences = new Preferences(prefs);
 		
@@ -49,7 +51,7 @@ public class PreferencesTest extends TestCase {
 	}
 	
 	public void testTunnelPreferencesTunnelingNotEnabled() throws Exception {
-		SharedPreferences prefs = createAllPreferences(false);
+		PreferenceProvider prefs = mock(PreferenceProvider.class);
 		
 		Preferences preferences = new Preferences(prefs);
 		
@@ -58,19 +60,19 @@ public class PreferencesTest extends TestCase {
 		assertNull(preferences.getTunnelConfig());
 	}
 
-	private SharedPreferences createAllPreferences(boolean isTunnelingEnabled) throws IOException {
-		SharedPreferences prefs = mock(SharedPreferences.class);
-		when(prefs.getBoolean(Preferences.Key.ENABLE_TUNNELING.getKey(), false)).thenReturn(isTunnelingEnabled);
-		when(prefs.getString(Preferences.Key.ACCOUNT_PASSWORD.getKey(), null)).thenReturn("password");
-		when(prefs.getString(Preferences.Key.ACCOUNT_USERNAME.getKey(), null)).thenReturn("username");
+	private PreferenceProvider createAllPreferences(boolean isTunnelingEnabled) throws IOException {
+		PreferenceProvider prefs = mock(PreferenceProvider.class);
+		when(prefs.getBoolean(R.string.pref_enable_tunnel)).thenReturn(true);
+		when(prefs.getString(R.string.pref_account_password)).thenReturn("password");
+		when(prefs.getString(R.string.pref_account_username)).thenReturn("username");
 		
-		when(prefs.getString(Preferences.Key.SSH_PROXY_HOST.getKey(), null)).thenReturn("localhost");
-		when(prefs.getInt(Preferences.Key.SSH_PROXY_PORT.getKey(), -1)).thenReturn(22);
-		when(prefs.getString(Preferences.Key.SSH_USERNAME.getKey(), null)).thenReturn("jason");
+		when(prefs.getString(R.string.pref_ssh_proxy_host)).thenReturn("localhost");
+		when(prefs.getInteger(R.string.pref_ssh_proxy_port, 22)).thenReturn(22);
+		when(prefs.getString(R.string.pref_ssh_username)).thenReturn("jason");
 		
 		File privateKey = ResourceUtils.getResourceAsFile("/android.pk");
-//		when(prefs.getString(Preferences.Key.SSH_PASSWORD.getKey(), null)).thenReturn(null);
-		when(prefs.getString(Preferences.Key.SSH_PUB_KEY.getKey(), null)).thenReturn(privateKey.getAbsolutePath());
+		//when(prefs.getString(R.string.pref_ssh_password)).thenReturn(null);
+		when(prefs.getFile(R.string.pref_ssh_pubkey)).thenReturn(privateKey);
 		
 		return prefs;
 	}

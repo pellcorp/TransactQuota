@@ -20,9 +20,22 @@
     <string name="authentication_settings">Authentication</string>
     <string name="tunneling_settings">Tunnelling</string>
     <string name="enable_tunneling_label">Enable Tunnelling</string>
+    
     <string name="ssh_proxy_host">Ssh Host</string>
     <string name="ssh_proxy_port">Ssh Port</string>
     <string name="ssh_username">Ssh Username</string>
     <string name="ssh_pubkey">Ssh Private Key</string>
     <string name="ssh_password">Ssh Password or Passphrase</string>
+    
+    <string name="pref_account_username">account.username</string>
+    <string name="pref_account_password">account.password</string>
+    <string name="pref_enable_tunnel">tunneling.enable</string>
+    <string name="pref_ssh_proxy_host">ssh.proxy.host</string>
+    <string name="pref_ssh_proxy_port">ssh.proxy.port</string>
+    <string name="pref_ssh_username">ssh.username</string>
+    <string name="pref_ssh_pubkey">ssh.pubkey</string>
+    <string name="pref_ssh_password">ssh.password</string>
+    
+    
+    
 </resources>

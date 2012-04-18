@@ -1,21 +1,22 @@
-package com.pellcorp.android.transact;
+package com.pellcorp.android.transact.android;
 
 import java.io.IOException;
 
+import android.R;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.pellcorp.android.transact.InvalidCredentialsException;
+import com.pellcorp.android.transact.UsageNotAvailableException;
+
 public abstract class DownloadTask<Result> extends AsyncTask<String, Void, DownloadResult<Result>> {
 	private static final String TAG = DownloadTask.class.getName();
 	
 	private final ProgressDialog dialog;
-	private final Context context;
 	
 	public DownloadTask(Context context) {
-		this.context = context;
-		
 		dialog = new ProgressDialog(context);
 		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 	}
@@ -23,7 +24,7 @@ public abstract class DownloadTask<Result> extends AsyncTask<String, Void, Downl
 	@Override
 	protected void onPreExecute() {
 		dialog.show();
-		dialog.setMessage(context.getString(R.string.loading));
+		dialog.setMessage("Loading ..."); // FIXME - I18N
 	}
 
 	@Override

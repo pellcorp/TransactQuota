@@ -5,48 +5,48 @@
     <PreferenceCategory android:title="@string/authentication_settings">
         <EditTextPreference
             android:defaultValue=""
-            android:key="account.username"
+            android:key="@string/pref_account_username"
             android:summary="@string/username_summary"
             android:title="@string/username_title" />
         
         <EditTextPreference
             android:defaultValue=""
-            android:key="account.password"
+            android:key="@string/pref_account_password"
             android:summary="@string/password_summary"
             android:title="@string/password_title" />
     </PreferenceCategory>
     
     <PreferenceCategory android:title="@string/tunneling_settings">
-        <CheckBoxPreference android:key="enable.tunnel" 
+        <CheckBoxPreference android:key="@string/pref_enable_tunnel" 
             android:title="@string/enable_tunneling_label" />
         
         <EditTextPreference
             android:defaultValue=""
-            android:key="ssh.proxy.host"
+            android:key="@string/pref_ssh_proxy_host"
             android:summary=""
             android:title="@string/ssh_proxy_host" />
         
         <EditTextPreference
             android:defaultValue="22"
-            android:key="ssh.proxy.port"
+            android:key="@string/pref_ssh_proxy_port"
             android:summary=""
             android:title="@string/ssh_proxy_port" />
         
         <EditTextPreference
             android:defaultValue=""
-            android:key="ssh.username"
+            android:key="@string/pref_ssh_username"
             android:summary=""
             android:title="@string/ssh_username" />
         
         <EditTextPreference
             android:defaultValue=""
-            android:key="ssh.pubkey"
+            android:key="@string/pref_ssh_pubkey"
             android:summary=""
             android:title="@string/ssh_pubkey" />
         
         <EditTextPreference
             android:defaultValue=""
-            android:key="ssh.password"
+            android:key="@string/pref_ssh_password"
             android:summary=""
             android:title="@string/ssh_password" />
         

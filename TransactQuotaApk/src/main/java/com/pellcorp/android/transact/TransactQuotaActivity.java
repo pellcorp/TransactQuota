@@ -21,9 +21,13 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.pellcorp.android.transact.android.DownloadResult;
+import com.pellcorp.android.transact.android.DownloadTask;
+import com.pellcorp.android.transact.android.PreferenceProviderImpl;
+
 public class TransactQuotaActivity extends Activity implements OnClickListener {
 	private static final int USAGE_TIMEOUT = 15;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,7 +47,8 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		
-		final Preferences preferences = new Preferences(sharedPreferences);
+		final Preferences preferences = new Preferences(
+				new PreferenceProviderImpl(this, sharedPreferences));
 		
 		if (preferences.getAccountUsername() != null && preferences.getAccountPassword() != null) {
 			try {
