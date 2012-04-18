@@ -22,7 +22,7 @@ public abstract class DownloadTask<Result> extends AsyncTask<String, Void, Downl
 	}
 	
 	public void setLoadingMessage(String message) {
-		this.loadingMessage = loadingMessage;
+		this.loadingMessage = message;
 	}
 	
 	@Override
