@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,22 +22,27 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class TransactQuotaActivity extends Activity implements OnClickListener {
+	private static final String TAG = "TransactQuotaActivity";
+	
 	private TransactQuota transactQuota;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		Log.i(TAG, "Starting onCreate");
+		
 		setContentView(R.layout.main);
 
 		Button refreshButton = (Button) findViewById(R.id.refresh_button);
 		refreshButton.setOnClickListener(this);
-
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-
+		
+		Log.i(TAG, "Starting onResume");
 		initTransactQuota();
 		
 		refreshUsage();
@@ -67,10 +73,12 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 						preferences.getAccountUsername(),
 						preferences.getAccountPassword());
 			} catch (Exception e) {
+				Log.e(TAG, "initTransactQuota", e);
 				AlertDialog dialog = createErrorDialog(e.getMessage());
 				dialog.show();
 			}
 		} else {
+			Log.i(TAG, "Username and password not provided");
 			Dialog dialog = createSettingsMissingDialog(getString(R.string.settings_missing_label));
 			dialog.show();
 		}
@@ -82,6 +90,7 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 				doUsageDownload();
 			}
 		} catch (Exception e) {
+			Log.e(TAG, "refreshUsage", e);
 			AlertDialog dialog = createErrorDialog(e.getMessage());
 			dialog.show();
 		}
@@ -102,16 +111,13 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 					TextView peakUsage = (TextView) findViewById(R.id.PeakUsage);
 					TextView offPeakUsage = (TextView) findViewById(R.id.OffPeakUsage);
 
-					peakUsage.setText(usage.getResult().getPeakUsage()
-							.toString());
-					offPeakUsage.setText(usage.getResult().getOffPeakUsage()
-							.toString());
+					peakUsage.setText(usage.getResult().getPeakUsage().toString());
+					offPeakUsage.setText(usage.getResult().getOffPeakUsage().toString());
 				} else if (usage.isInvalidCredentials()) {
 					Dialog dialog = createSettingsMissingDialog(getString(R.string.invalid_account_details));
 					dialog.show();
 				} else {
-					AlertDialog dialog = createErrorDialog(usage
-							.getErrorMessage());
+					AlertDialog dialog = createErrorDialog(usage.getErrorMessage());
 					dialog.show();
 				}
 			}

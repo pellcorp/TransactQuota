@@ -35,6 +35,7 @@ public abstract class DownloadTask<Result> extends AsyncTask<Void, Void, Downloa
 		} catch(InvalidCredentialsException e) {
 			return new DownloadResult<Result>(true);
 		} catch (UsageNotAvailableException e) {
+			Log.e(TAG, "UsageNotAvailableException", e);
 			return new DownloadResult<Result>(e.getMessage());
 		} catch (IOException e) {
 			Log.e(TAG, "Connectivity Exception", e);
