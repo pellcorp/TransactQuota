@@ -10,7 +10,7 @@ import android.util.Log;
 import com.pellcorp.android.transact.InvalidCredentialsException;
 import com.pellcorp.android.transact.UsageNotAvailableException;
 
-public abstract class DownloadTask<Result> extends AsyncTask<String, Void, DownloadResult<Result>> {
+public abstract class DownloadTask<Result> extends AsyncTask<Void, Void, DownloadResult<Result>> {
 	private static final String TAG = DownloadTask.class.getName();
 	
 	private final Context context;
@@ -29,9 +29,9 @@ public abstract class DownloadTask<Result> extends AsyncTask<String, Void, Downl
 	}
 
 	@Override
-	protected DownloadResult<Result> doInBackground(String... params) {
+	protected DownloadResult<Result> doInBackground(Void ... whocares) {
 		try {
-			return new DownloadResult<Result>(doTask(params[0], params[1]));
+			return new DownloadResult<Result>(doTask());
 		} catch(InvalidCredentialsException e) {
 			return new DownloadResult<Result>(true);
 		} catch (UsageNotAvailableException e) {
@@ -42,7 +42,7 @@ public abstract class DownloadTask<Result> extends AsyncTask<String, Void, Downl
 		}
 	}
 	
-	protected abstract Result doTask(String username, String password) throws IOException;
+	protected abstract Result doTask() throws IOException;
 	protected abstract void onFinish(DownloadResult<Result> result);
 
 	protected void onPostExecute(DownloadResult<Result> result) {
