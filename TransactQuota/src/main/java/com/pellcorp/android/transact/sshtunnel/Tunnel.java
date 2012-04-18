@@ -14,7 +14,9 @@ public class Tunnel {
 	public Tunnel(final TunnelConfig tunnelConfig) throws JSchException {
 		this.tunnelConfig = tunnelConfig;
 		
-		jsch.addIdentity(tunnelConfig.getPrivateKey().getAbsolutePath(), "");
+		SshCredentials credentials = tunnelConfig.getSshCredentials();
+		jsch.addIdentity(credentials.getKey().getAbsolutePath(), 
+				credentials.getPassword());
 	}
 	
 	public HttpHost connect(HttpHost portForward) throws JSchException {
@@ -34,7 +36,7 @@ public class Tunnel {
 		}
 		
 		session = jsch.getSession(
-				tunnelConfig.getUsername(), 
+				tunnelConfig.getSshCredentials().getUsername(), 
 				tunnelConfig.getTunnelHost().getHostName(), 
 				tunnelConfig.getTunnelHost().getPort());
 		

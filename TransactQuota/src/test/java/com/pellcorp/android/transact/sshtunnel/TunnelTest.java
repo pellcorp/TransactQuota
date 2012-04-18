@@ -37,16 +37,15 @@ public class TunnelTest {
 	public void setUp() throws Exception {
 		privateKey = ResourceUtils.getResourceAsFile("/android.pk");
 
-		tunnelConfig = new TunnelConfig(new SshHost("192.168.79.160", 22), // tunnel
-				"developer", privateKey);
+		tunnelConfig = new TunnelConfig(new SshHost("192.168.79.160", 22),
+				new SshCredentials("developer", privateKey, null));
 	}
 
 	@Test
 	@Ignore
 	public void testTunnelToTransact() throws Exception {
-		tunnelConfig = new TunnelConfig(new SshHost("192.168.79.160", 22), // tunnel
-				//new HttpHost("portal.vic.transact.com.au", 443), // proxy
-				"developer", privateKey);
+		tunnelConfig = new TunnelConfig(new SshHost("192.168.79.160", 22),
+				new SshCredentials("developer", privateKey, null));
 		
 		TrustManager easyTrustManager = new X509TrustManager() {
 

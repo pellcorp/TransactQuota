@@ -4,6 +4,7 @@ import java.io.File;
 
 import android.content.SharedPreferences;
 
+import com.pellcorp.android.transact.sshtunnel.SshCredentials;
 import com.pellcorp.android.transact.sshtunnel.SshHost;
 import com.pellcorp.android.transact.sshtunnel.TunnelConfig;
 
@@ -43,15 +44,10 @@ public class Preferences {
 	public TunnelConfig getTunnelConfig() {
 		if (isTunnelingEnabled()) {
 			SshHost sshHost = getSshHost();
-			String sshUsername = getSshUsername();
-			File sshPubKey = getSshKey();
-			//String sshPassword = getSshPassword();
+			SshCredentials sshCredentials = getSshCredentials();
 			
-			if (sshHost != null && sshUsername != null && sshPubKey != null) {
-				return new TunnelConfig(
-					sshHost, //tunnel
-					sshUsername,
-					sshPubKey);
+			if (sshHost != null && sshCredentials != null) {
+				return new TunnelConfig(sshHost, sshCredentials);
 			}
 		}
 		return null;
@@ -68,16 +64,16 @@ public class Preferences {
 		}
 	}
 	
-	private String getSshUsername() {
-		return getStringValue(Key.SSH_USERNAME);
-	}
-	
-	private String getSshPassword() {
-		return getStringValue(Key.SSH_PASSWORD);
-	}
-	
-	private File getSshKey() {
-		return getFileValue(Key.SSH_PUB_KEY);
+	private SshCredentials getSshCredentials() {
+		File keyFile = getFileValue(Key.SSH_PUB_KEY);
+		String username = getStringValue(Key.SSH_USERNAME);
+		String password = getStringValue(Key.SSH_PASSWORD);
+		
+		if (keyFile != null && username != null) {
+			return new SshCredentials(username, keyFile, password);
+		} else {
+			return null;
+		}
 	}
 	
 	public String getAccountUsername() {

@@ -43,6 +43,13 @@
             android:key="ssh.pubkey"
             android:summary=""
             android:title="@string/ssh_pubkey" />
+        
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="ssh.password"
+            android:summary=""
+            android:title="@string/ssh_password" />
+        
     </PreferenceCategory>
 
 </PreferenceScreen>

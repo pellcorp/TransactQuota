@@ -24,4 +24,5 @@
     <string name="ssh_proxy_port">Ssh Port</string>
     <string name="ssh_username">Ssh Username</string>
     <string name="ssh_pubkey">Ssh Private Key</string>
+    <string name="ssh_password">Ssh Password or Passphrase</string>
 </resources>
