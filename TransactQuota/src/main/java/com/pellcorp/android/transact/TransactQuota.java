@@ -71,7 +71,6 @@ public class TransactQuota {
 			if (tunnelConfig != null) {
 				tunnel = new Tunnel(tunnelConfig);
 				HttpHost proxy = tunnel.connect(new HttpHost(TRANSACT_PORTAL_HOST, 443));
-				//client.getParams().setParameter(AllClientPNames.DEFAULT_PROXY, proxy);
 				url  = URL.replace("${HOST_PORT}", proxy.getHostName() + ":" + proxy.getPort());
 			}
 			
@@ -104,26 +103,22 @@ public class TransactQuota {
 		int timeoutSocket = 5000;
 		
 		TrustManager easyTrustManager = new X509TrustManager() {
-
 		    @Override
 		    public void checkClientTrusted(
 		            X509Certificate[] chain,
 		            String authType) throws CertificateException {
-		        // Oh, I am easy!
 		    }
 
 		    @Override
 		    public void checkServerTrusted(
 		            X509Certificate[] chain,
 		            String authType) throws CertificateException {
-		        // Oh, I am easy!
 		    }
 
 		    @Override
 		    public X509Certificate[] getAcceptedIssuers() {
 		        return null;
 		    }
-		    
 		};
 
 		SSLContext sslcontext = SSLContext.getInstance("TLS");
@@ -132,13 +127,9 @@ public class TransactQuota {
 		SSLSocketFactory sf = new SSLSocketFactory(sslcontext, 
 				SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER); 
 		
-		Scheme http = new Scheme("http", 80, PlainSocketFactory.getSocketFactory());
-
-		Scheme https = new Scheme("https", 443, sf);
-
 		SchemeRegistry sr = new SchemeRegistry();
-		sr.register(http);
-		sr.register(https);
+		sr.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
+		sr.register(new Scheme("https", 443, sf));
 		
 		SingleClientConnManager connManager = new SingleClientConnManager(sr);
 		
