@@ -1,4 +1,4 @@
-package com.pellcorp.android.transact.android;
+package com.pellcorp.android.transact;
 
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;

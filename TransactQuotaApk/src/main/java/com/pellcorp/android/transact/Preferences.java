@@ -2,7 +2,6 @@ package com.pellcorp.android.transact;
 
 import java.io.File;
 
-import com.pellcorp.android.transact.android.PreferenceProvider;
 import com.pellcorp.android.transact.sshtunnel.SshCredentials;
 import com.pellcorp.android.transact.sshtunnel.SshHost;
 import com.pellcorp.android.transact.sshtunnel.TunnelConfig;

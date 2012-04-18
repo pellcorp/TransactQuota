@@ -8,8 +8,6 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import com.pellcorp.android.transact.android.PreferenceProvider;
-
 public class PreferencesTest extends TestCase {
 	public void testNoTunnelPreferences() {
 		PreferenceProvider prefs = mock(PreferenceProvider.class);
@@ -41,7 +39,7 @@ public class PreferencesTest extends TestCase {
 	}
 	
 	public void testTunnelPreferences() throws Exception {
-		PreferenceProvider prefs = mock(PreferenceProvider.class);
+		PreferenceProvider prefs = createAllPreferences(true);
 		
 		Preferences preferences = new Preferences(prefs);
 		
@@ -51,7 +49,7 @@ public class PreferencesTest extends TestCase {
 	}
 	
 	public void testTunnelPreferencesTunnelingNotEnabled() throws Exception {
-		PreferenceProvider prefs = mock(PreferenceProvider.class);
+		PreferenceProvider prefs = createAllPreferences(false);
 		
 		Preferences preferences = new Preferences(prefs);
 		
@@ -62,7 +60,8 @@ public class PreferencesTest extends TestCase {
 
 	private PreferenceProvider createAllPreferences(boolean isTunnelingEnabled) throws IOException {
 		PreferenceProvider prefs = mock(PreferenceProvider.class);
-		when(prefs.getBoolean(R.string.pref_enable_tunnel)).thenReturn(true);
+		
+		when(prefs.getBoolean(R.string.pref_enable_tunnel)).thenReturn(isTunnelingEnabled);
 		when(prefs.getString(R.string.pref_account_password)).thenReturn("password");
 		when(prefs.getString(R.string.pref_account_username)).thenReturn("username");
 		

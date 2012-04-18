@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="003" android:versionName="0.0.3-SNAPSHOT" package="com.pellcorp.android.transact">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="004" android:versionName="0.0.4-SNAPSHOT" package="com.pellcorp.android.transact">
 
     <uses-sdk android:minSdkVersion="10"/>
     <uses-permission android:name="android.permission.INTERNET"/>

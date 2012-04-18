@@ -1,4 +1,4 @@
-package com.pellcorp.android.transact.android;
+package com.pellcorp.android.transact;
 
 public class DownloadResult<R> {
 	private R result;

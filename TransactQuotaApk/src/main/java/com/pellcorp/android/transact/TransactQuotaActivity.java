@@ -21,9 +21,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.pellcorp.android.transact.android.DownloadResult;
-import com.pellcorp.android.transact.android.DownloadTask;
-import com.pellcorp.android.transact.android.PreferenceProviderImpl;
 
 public class TransactQuotaActivity extends Activity implements OnClickListener {
 	private static final int USAGE_TIMEOUT = 15;

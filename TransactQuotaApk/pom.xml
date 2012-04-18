@@ -15,13 +15,6 @@
 			<groupId>com.pellcorp.android</groupId>
 			<artifactId>TransactQuota</artifactId>
 			<version>${project.version}</version>
-
-			<exclusions>
-				<exclusion>
-					<groupId>com.google.android</groupId>
-					<artifactId>android</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>

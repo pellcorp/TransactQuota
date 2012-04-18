@@ -1,4 +1,4 @@
-package com.pellcorp.android.transact.android;
+package com.pellcorp.android.transact;
 
 import java.io.File;
 
