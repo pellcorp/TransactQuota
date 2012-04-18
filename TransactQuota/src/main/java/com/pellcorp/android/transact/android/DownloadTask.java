@@ -2,7 +2,6 @@ package com.pellcorp.android.transact.android;
 
 import java.io.IOException;
 
-import android.R;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -15,16 +14,21 @@ public abstract class DownloadTask<Result> extends AsyncTask<String, Void, Downl
 	private static final String TAG = DownloadTask.class.getName();
 	
 	private final ProgressDialog dialog;
+	private String loadingMessage;
 	
 	public DownloadTask(Context context) {
 		dialog = new ProgressDialog(context);
 		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 	}
 	
+	public void setLoadingMessage(String message) {
+		this.loadingMessage = loadingMessage;
+	}
+	
 	@Override
 	protected void onPreExecute() {
 		dialog.show();
-		dialog.setMessage("Loading ..."); // FIXME - I18N
+		dialog.setMessage(loadingMessage);
 	}
 
 	@Override

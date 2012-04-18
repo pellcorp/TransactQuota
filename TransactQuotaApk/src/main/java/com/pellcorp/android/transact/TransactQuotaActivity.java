@@ -79,7 +79,8 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 
 	private DownloadResult<Usage> doUsageDownload(final Preferences preferences)
 			throws InterruptedException, ExecutionException, TimeoutException {
-		DownloadResult<Usage> usage = new DownloadTask<Usage>(this) {
+		
+		DownloadTask<Usage> downloadTask = new DownloadTask<Usage>(this) {
 			@Override
 			protected Usage doTask(String username, String password) throws IOException {
 				TransactQuota quota = new TransactQuota(
@@ -87,8 +88,14 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 						username, password);
 				return quota.getUsage();
 			}
-		}.execute(preferences.getAccountUsername(), preferences.getAccountPassword())
-		.get(USAGE_TIMEOUT, TimeUnit.SECONDS);
+		};
+		
+		downloadTask.setLoadingMessage(getString(R.string.loading));
+		
+		DownloadResult<Usage> usage = 
+				downloadTask.execute(preferences.getAccountUsername(), preferences.getAccountPassword())
+				.get(USAGE_TIMEOUT, TimeUnit.SECONDS);
+		
 		return usage;
 	}
 
