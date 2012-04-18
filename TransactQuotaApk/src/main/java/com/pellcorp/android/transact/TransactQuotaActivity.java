@@ -46,8 +46,10 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 	public void onPause() {
 		super.onPause();
 		
-		transactQuota.disconnect();
-		transactQuota = null;
+		if (transactQuota != null) {
+			transactQuota.disconnect();
+			transactQuota = null;
+		}
 	}
 
 	private void initTransactQuota() {
