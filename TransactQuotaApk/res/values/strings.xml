@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Transact Quota</string>
-	<string name="settings_label">Account Details</string>
+    <string name="settings_label">Account Details</string>
     <string name="settings_title">Transact Account Details</string>
     <string name="settings_shortcut">s</string>
     <string name="username_title">Username</string>
@@ -20,13 +20,11 @@
     <string name="authentication_settings">Authentication</string>
     <string name="tunneling_settings">Tunnelling</string>
     <string name="enable_tunneling_label">Enable Tunnelling</string>
-    
     <string name="ssh_proxy_host">Ssh Host</string>
     <string name="ssh_proxy_port">Ssh Port</string>
     <string name="ssh_username">Ssh Username</string>
     <string name="ssh_pubkey">Ssh Private Key</string>
     <string name="ssh_password">Ssh Password or Passphrase</string>
-    
     <string name="pref_account_username">account.username</string>
     <string name="pref_account_password">account.password</string>
     <string name="pref_enable_tunnel">tunneling.enable</string>
@@ -35,7 +33,15 @@
     <string name="pref_ssh_username">ssh.username</string>
     <string name="pref_ssh_pubkey">ssh.pubkey</string>
     <string name="pref_ssh_password">ssh.password</string>
-    
+
     <string name="crash_toast_text">Ooooops ! I crashed, but a report has been sent to my developer to help fix the issue !</string>
-    
+    <string name="crash_notif_ticker_text">Unexpected error, please send a report...</string>
+    <string name="crash_notif_title">Transact Quota has crashed...</string>
+    <string name="crash_notif_text">Please click here to help fix the issue.</string>
+    <string name="crash_dialog_title">Transact Quota has crashed</string>
+    <string name="crash_dialog_text">An unexpected error occurred forcing the
+    application to stop. Please help us fix this by sending us error data,
+    all you have to do is click \'OK\'.</string>
+    <string name="crash_dialog_comment_prompt">You might add your comments about the problem below:</string>
+    <string name="crash_dialog_ok_toast">Thank you !</string>
 </resources>
