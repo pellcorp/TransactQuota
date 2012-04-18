@@ -2,7 +2,6 @@ package com.pellcorp.android.transact;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import android.app.Activity;
@@ -23,8 +22,6 @@ import android.widget.TextView;
 
 
 public class TransactQuotaActivity extends Activity implements OnClickListener {
-	private static final int USAGE_TIMEOUT = 15;
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,7 +29,11 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 		
 		Button refreshButton = (Button) findViewById(R.id.refresh_button);
 		refreshButton.setOnClickListener(this);
-		
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
 		refreshUsage();
 	}
 	
@@ -45,8 +46,31 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 		
 		if (preferences.getAccountUsername() != null && preferences.getAccountPassword() != null) {
 			try {
-				DownloadResult<Usage> usage = doUsageDownload(preferences);
-				
+				doUsageDownload(preferences);
+			} catch(Exception e) {
+				AlertDialog dialog = createErrorDialog(e.getMessage());
+				dialog.show();
+			}
+		} else {
+			Dialog dialog = createSettingsMissingDialog(getString(R.string.settings_missing_label));
+			dialog.show();
+		}
+	}
+
+	private void doUsageDownload(final Preferences preferences)
+			throws InterruptedException, ExecutionException, TimeoutException {
+		
+		DownloadTask<Usage> downloadTask = new DownloadTask<Usage>(this) {
+			@Override
+			protected Usage doTask(String username, String password) throws IOException {
+				TransactQuota quota = new TransactQuota(
+						preferences.getTunnelConfig(), 
+						username, password);
+				return quota.getUsage();
+			}
+
+			@Override
+			protected void onFinish(DownloadResult<Usage> usage) {
 				if (usage.getResult() != null) {
 					TextView peakUsage = (TextView) findViewById(R.id.PeakUsage);
 					TextView offPeakUsage = (TextView) findViewById(R.id.OffPeakUsage);
@@ -60,36 +84,11 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 					AlertDialog dialog = createErrorDialog(usage.getErrorMessage());
 					dialog.show();
 				}
-			} catch(Exception e) {
-				AlertDialog dialog = createErrorDialog(e.getMessage());
-				dialog.show();
-			}
-		} else {
-			Dialog dialog = createSettingsMissingDialog(getString(R.string.settings_missing_label));
-			dialog.show();
-		}
-	}
-
-	private DownloadResult<Usage> doUsageDownload(final Preferences preferences)
-			throws InterruptedException, ExecutionException, TimeoutException {
-		
-		DownloadTask<Usage> downloadTask = new DownloadTask<Usage>(this) {
-			@Override
-			protected Usage doTask(String username, String password) throws IOException {
-				TransactQuota quota = new TransactQuota(
-						preferences.getTunnelConfig(), 
-						username, password);
-				return quota.getUsage();
 			}
 		};
 		
-		downloadTask.setLoadingMessage(getString(R.string.loading));
-		
-		DownloadResult<Usage> usage = 
-				downloadTask.execute(preferences.getAccountUsername(), preferences.getAccountPassword())
-				.get(USAGE_TIMEOUT, TimeUnit.SECONDS);
-		
-		return usage;
+		downloadTask.execute(preferences.getAccountUsername(), 
+				preferences.getAccountPassword());
 	}
 
 	@Override

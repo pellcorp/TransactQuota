@@ -13,21 +13,18 @@ import com.pellcorp.android.transact.UsageNotAvailableException;
 public abstract class DownloadTask<Result> extends AsyncTask<String, Void, DownloadResult<Result>> {
 	private static final String TAG = DownloadTask.class.getName();
 	
-	private final ProgressDialog dialog;
-	private String loadingMessage;
+	private final Context context;
+	private ProgressDialog dialog;
 	
 	public DownloadTask(Context context) {
-		dialog = new ProgressDialog(context);
-		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-	}
-	
-	public void setLoadingMessage(String message) {
-		this.loadingMessage = message;
+		this.context = context;
 	}
 	
 	@Override
 	protected void onPreExecute() {
-		dialog.setMessage(loadingMessage);
+		dialog = new ProgressDialog(context);
+		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		dialog.setMessage(context.getString(R.string.loading));
 		dialog.show();
 	}
 
@@ -46,10 +43,12 @@ public abstract class DownloadTask<Result> extends AsyncTask<String, Void, Downl
 	}
 	
 	protected abstract Result doTask(String username, String password) throws IOException;
+	protected abstract void onFinish(DownloadResult<Result> result);
 
 	protected void onPostExecute(DownloadResult<Result> result) {
 		if (dialog.isShowing()) {
             dialog.dismiss();
         }
+		onFinish(result);
 	}
 }

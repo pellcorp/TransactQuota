@@ -94,8 +94,8 @@ public class TransactQuota {
 	}
 	
 	private HttpClient createClient() throws JSchException, KeyManagementException, NoSuchAlgorithmException {
-		int timeoutConnection = 3000;
-		int timeoutSocket = 5000;
+		int timeoutConnection = 5000;
+		int timeoutSocket = 10000;
 		
 		FakeSocketFactory sf = new FakeSocketFactory();
 		
