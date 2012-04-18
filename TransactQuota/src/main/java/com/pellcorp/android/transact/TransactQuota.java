@@ -1,6 +1,7 @@
 package com.pellcorp.android.transact;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
@@ -10,9 +11,9 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -22,7 +23,6 @@ import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.BasicCookieStore;
@@ -103,30 +103,7 @@ public class TransactQuota {
 		int timeoutConnection = 3000;
 		int timeoutSocket = 5000;
 		
-		TrustManager easyTrustManager = new X509TrustManager() {
-		    @Override
-		    public void checkClientTrusted(
-		            X509Certificate[] chain,
-		            String authType) throws CertificateException {
-		    }
-
-		    @Override
-		    public void checkServerTrusted(
-		            X509Certificate[] chain,
-		            String authType) throws CertificateException {
-		    }
-
-		    @Override
-		    public X509Certificate[] getAcceptedIssuers() {
-		        return null;
-		    }
-		};
-
-		SSLContext sslcontext = SSLContext.getInstance("TLS");
-		sslcontext.init(null, new TrustManager[] { easyTrustManager }, null);
-
-		SSLSocketFactory sf = new SSLSocketFactory(sslcontext);
-		sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER); 
+		FakeSocketFactory sf = new FakeSocketFactory();
 		
 		SchemeRegistry sr = new SchemeRegistry();
 		sr.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
@@ -142,8 +119,8 @@ public class TransactQuota {
 		return new DefaultHttpClient(connManager, params);
 	}
 
-	private String doGetLogin(String url, HttpContext localContext) throws IOException,
-			ClientProtocolException {
+	private String doGetLogin(String url, HttpContext localContext) 
+			throws IOException, URISyntaxException, HttpException {
 		HttpGet get = new HttpGet(url);
 		HttpResponse response = client.execute(get, localContext);
 		String html = EntityUtils.toString(response.getEntity());

@@ -1,12 +1,6 @@
 package com.pellcorp.android.transact.sshtunnel;
 
 import java.io.File;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -15,15 +9,16 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import com.pellcorp.android.transact.FakeSocketFactory;
 import com.pellcorp.android.transact.ResourceUtils;
 
 /**
@@ -43,38 +38,12 @@ public class TunnelTest {
 	}
 
 	@Test
+	@Ignore
 	public void testTunnelToTransact() throws Exception {
 		tunnelConfig = new TunnelConfig(new SshHost("localhost", 22),
 				new SshCredentials("developer", privateKey, null));
 		
-		TrustManager easyTrustManager = new X509TrustManager() {
-
-		    @Override
-		    public void checkClientTrusted(
-		            X509Certificate[] chain,
-		            String authType) throws CertificateException {
-		        // Oh, I am easy!
-		    }
-
-		    @Override
-		    public void checkServerTrusted(
-		            X509Certificate[] chain,
-		            String authType) throws CertificateException {
-		        // Oh, I am easy!
-		    }
-
-		    @Override
-		    public X509Certificate[] getAcceptedIssuers() {
-		        return null;
-		    }
-		    
-		};
-
-		SSLContext sslcontext = SSLContext.getInstance("TLS");
-		sslcontext.init(null, new TrustManager[] { easyTrustManager }, null);
-
-		SSLSocketFactory sf = new SSLSocketFactory(sslcontext);
-		sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER); 
+		FakeSocketFactory sf = new FakeSocketFactory();
 		
 		Scheme http = new Scheme("http", PlainSocketFactory.getSocketFactory(), 80);
 		Scheme https = new Scheme("https", sf, 443);
@@ -105,6 +74,7 @@ public class TunnelTest {
 	}
 
 	@Test
+	@Ignore
 	public void testTunnel() throws Exception {
 		Tunnel tunnel = new Tunnel(tunnelConfig);
 		HttpHost proxyHost = tunnel.connect(new HttpHost("google.com", 80));
