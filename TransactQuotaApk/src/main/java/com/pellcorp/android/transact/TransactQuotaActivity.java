@@ -32,11 +32,7 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 		
 		Button refreshButton = (Button) findViewById(R.id.refresh_button);
 		refreshButton.setOnClickListener(this);
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
+		
 		refreshUsage();
 	}
 	
