@@ -23,6 +23,7 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -111,6 +112,7 @@ public class TransactQuota {
 		params.setIntParameter(AllClientPNames.CONNECTION_TIMEOUT, timeoutConnection);
 		params.setIntParameter(AllClientPNames.SO_TIMEOUT, timeoutSocket);
 		params.setParameter(AllClientPNames.USER_AGENT, USER_AGENT);
+		params.setIntParameter(AllClientPNames.SOCKET_BUFFER_SIZE, 8192);
 		
 		ThreadSafeClientConnManager connManager = new ThreadSafeClientConnManager(params, sr);
 		
