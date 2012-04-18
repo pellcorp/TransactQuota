@@ -18,9 +18,10 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.pellcorp.android.transact.ResourceUtils;
@@ -37,14 +38,13 @@ public class TunnelTest {
 	public void setUp() throws Exception {
 		privateKey = ResourceUtils.getResourceAsFile("/android.pk");
 
-		tunnelConfig = new TunnelConfig(new SshHost("192.168.79.160", 22),
+		tunnelConfig = new TunnelConfig(new SshHost("localhost", 22),
 				new SshCredentials("developer", privateKey, null));
 	}
 
 	@Test
-	@Ignore
 	public void testTunnelToTransact() throws Exception {
-		tunnelConfig = new TunnelConfig(new SshHost("192.168.79.160", 22),
+		tunnelConfig = new TunnelConfig(new SshHost("localhost", 22),
 				new SshCredentials("developer", privateKey, null));
 		
 		TrustManager easyTrustManager = new X509TrustManager() {
@@ -73,23 +73,23 @@ public class TunnelTest {
 		SSLContext sslcontext = SSLContext.getInstance("TLS");
 		sslcontext.init(null, new TrustManager[] { easyTrustManager }, null);
 
-		SSLSocketFactory sf = new SSLSocketFactory(sslcontext, 
-				SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER); 
+		SSLSocketFactory sf = new SSLSocketFactory(sslcontext);
+		sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER); 
 		
-		Scheme http = new Scheme("http", 80, PlainSocketFactory.getSocketFactory());
-
-		Scheme https = new Scheme("https", 443, sf);
+		Scheme http = new Scheme("http", PlainSocketFactory.getSocketFactory(), 80);
+		Scheme https = new Scheme("https", sf, 443);
 
 		SchemeRegistry sr = new SchemeRegistry();
 		sr.register(http);
 		sr.register(https);
 		
-		SingleClientConnManager connManager = new SingleClientConnManager(sr);
+		HttpParams params = new BasicHttpParams();
+		SingleClientConnManager connManager = new SingleClientConnManager(params, sr);
 		
 		Tunnel tunnel = new Tunnel(tunnelConfig);
 		HttpHost proxyHost = tunnel.connect(new HttpHost("portal.vic.transact.com.au", 443));
 
-		HttpClient client = new DefaultHttpClient(connManager);
+		HttpClient client = new DefaultHttpClient(connManager, params);
 
 		HttpGet get = new HttpGet("https://localhost:" + proxyHost.getPort()
 				+ "/portal/default/user/login?_next=/portal/default/index");
@@ -99,14 +99,12 @@ public class TunnelTest {
 	}
 	
 	@Test
-	@Ignore
 	public void testShell() throws Exception {
 		Shell shell = new Shell(tunnelConfig);
 		System.out.println(shell.getShellLoginMessage());
 	}
 
 	@Test
-	@Ignore
 	public void testTunnel() throws Exception {
 		Tunnel tunnel = new Tunnel(tunnelConfig);
 		HttpHost proxyHost = tunnel.connect(new HttpHost("google.com", 80));

@@ -28,6 +28,7 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
+import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -124,23 +125,21 @@ public class TransactQuota {
 		SSLContext sslcontext = SSLContext.getInstance("TLS");
 		sslcontext.init(null, new TrustManager[] { easyTrustManager }, null);
 
-		SSLSocketFactory sf = new SSLSocketFactory(sslcontext, 
-				SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER); 
+		SSLSocketFactory sf = new SSLSocketFactory(sslcontext);
+		sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER); 
 		
 		SchemeRegistry sr = new SchemeRegistry();
-		sr.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
-		sr.register(new Scheme("https", 443, sf));
+		sr.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+		sr.register(new Scheme("https", sf, 443));
 		
-		SingleClientConnManager connManager = new SingleClientConnManager(sr);
-		
-		HttpClient httpClient =  new DefaultHttpClient(connManager);
-		
-		HttpParams params = httpClient.getParams();
+		HttpParams params = new BasicHttpParams();
 		params.setIntParameter(AllClientPNames.CONNECTION_TIMEOUT, timeoutConnection);
 		params.setIntParameter(AllClientPNames.SO_TIMEOUT, timeoutSocket);
 		params.setParameter(AllClientPNames.USER_AGENT, USER_AGENT);
 		
-		return httpClient;
+		SingleClientConnManager connManager = new SingleClientConnManager(params, sr);
+		
+		return new DefaultHttpClient(connManager, params);
 	}
 
 	private String doGetLogin(String url, HttpContext localContext) throws IOException,

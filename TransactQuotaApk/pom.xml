@@ -15,6 +15,13 @@
 			<groupId>com.pellcorp.android</groupId>
 			<artifactId>TransactQuota</artifactId>
 			<version>${project.version}</version>
+			<exclusions>
+				<!-- android already includes http client -->
+				<exclusion>
+					<groupId>org.apache.httpcomponents</groupId>
+					<artifactId>httpclient</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
