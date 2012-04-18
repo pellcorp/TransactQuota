@@ -27,8 +27,8 @@ public abstract class DownloadTask<Result> extends AsyncTask<String, Void, Downl
 	
 	@Override
 	protected void onPreExecute() {
-		dialog.show();
 		dialog.setMessage(loadingMessage);
+		dialog.show();
 	}
 
 	@Override
