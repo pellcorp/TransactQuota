@@ -48,7 +48,12 @@ public abstract class DownloadTask<Result> extends AsyncTask<Void, Void, Downloa
 
 	protected void onPostExecute(DownloadResult<Result> result) {
 		if (dialog.isShowing()) {
-            dialog.dismiss();
+			try {
+		        dialog.dismiss();
+		        dialog = null;
+		    } catch (Exception e) {
+		        // nothing
+		    }
         }
 		onFinish(result);
 	}
