@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.AllClientPNames;
@@ -17,11 +21,10 @@ import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
@@ -36,7 +39,7 @@ import com.pellcorp.android.transact.sshtunnel.Tunnel;
 import com.pellcorp.android.transact.sshtunnel.TunnelConfig;
 
 public class TransactQuota {
-	//private static final String USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:11.0) Gecko/20100101 Firefox/11.0"; 
+	private static final String USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:11.0) Gecko/20100101 Firefox/11.0"; 
 	
 	private static final String URL = "https://${HOST_PORT}/portal/default/user/login?_next=/portal/default/index";
 	private static final String TRANSACT_PORTAL_HOST = "portal.vic.transact.com.au";
@@ -120,7 +123,7 @@ public class TransactQuota {
 		HttpParams params = new BasicHttpParams();
 		params.setIntParameter(AllClientPNames.CONNECTION_TIMEOUT, timeoutConnection);
 		params.setIntParameter(AllClientPNames.SO_TIMEOUT, timeoutSocket);
-		//params.setParameter(AllClientPNames.USER_AGENT, USER_AGENT);
+		params.setParameter(AllClientPNames.USER_AGENT, USER_AGENT);
 		params.setIntParameter(AllClientPNames.SOCKET_BUFFER_SIZE, 8192);
 		
 		ThreadSafeClientConnManager connManager = new ThreadSafeClientConnManager(params, sr);
@@ -139,14 +142,16 @@ public class TransactQuota {
 	}
 	
 	private Usage doSubmit(String url, String formKey, HttpContext localContext) throws Exception {
-		MultipartEntity entity = new MultipartEntity();
-		entity.addPart("uname", new StringBody(username));
-		entity.addPart("passwd", new StringBody(password));
-		entity.addPart("_next", new StringBody("/portal/default/index"));
-		entity.addPart("_formkey", new StringBody(formKey));
-		entity.addPart("_formname", new StringBody("login"));
-
 		HttpPost post = new HttpPost(url);
+
+		List<NameValuePair> parameters = new ArrayList<NameValuePair>();
+		parameters.add(new BasicNameValuePair("uname", username));
+		parameters.add(new BasicNameValuePair("passwd", password));
+		parameters.add(new BasicNameValuePair("_next", "/portal/default/index"));
+		parameters.add(new BasicNameValuePair("_formkey", formKey));
+		parameters.add(new BasicNameValuePair("_formname", "login"));
+		
+		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(parameters);
 		post.setEntity(entity);
 		
 		HttpResponse response = client.execute(post, localContext);

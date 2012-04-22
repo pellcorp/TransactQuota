@@ -30,19 +30,15 @@
 	    <dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.0-alpha4</version>
-		</dependency>
-		 
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpmime</artifactId>
-			<version>4.1.3</version>
+			<version>4.0.1</version>
+			<!-- set to this temporarily when you want to check api compatibility with android -->
+			<!--  <version>4.0-alpha4</version>  -->
 		</dependency>
 		
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
-			<version>4.1.3</version>
+			<version>4.0.1</version>
 		</dependency>
 		
 		<dependency>
