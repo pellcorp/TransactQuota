@@ -1,8 +1,5 @@
 This app is for users who have use the Transact ISP (previously NCABLE) in victoria.  
 
-Transact does not appear to expose QuotaXML for Victorian customers, so the various Quota
-apps are not available.
-
 Because of Transact's own restrictions this app will not be able to load your quota
 info unless you are using WIFI that is connected to the internet via your transact modem
 or you configure a SSH server on your local environment that can be connected to externally.
