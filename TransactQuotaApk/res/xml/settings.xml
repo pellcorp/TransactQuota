@@ -15,7 +15,8 @@
             android:summary="@string/password_summary"
             android:title="@string/password_title" />
     </PreferenceCategory>
-    
+
+<!-- 
     <PreferenceCategory android:title="@string/tunneling_settings">
         <CheckBoxPreference android:key="@string/pref_enable_tunnel" 
             android:title="@string/enable_tunneling_label" />
@@ -51,5 +52,6 @@
             android:title="@string/ssh_password" />
         
     </PreferenceCategory>
-
+ -->
+ 
 </PreferenceScreen>

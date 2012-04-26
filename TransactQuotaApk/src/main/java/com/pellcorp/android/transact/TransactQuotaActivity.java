@@ -3,6 +3,9 @@ package com.pellcorp.android.transact;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,7 +14,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,13 +23,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class TransactQuotaActivity extends Activity implements OnClickListener {
-	private static final String TAG = "TransactQuotaActivity";
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		Log.i(TAG, "Starting onCreate");
+		logger.info("Starting onCreate");
 		
 		setContentView(R.layout.main);
 
@@ -39,7 +41,7 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 	public void onResume() {
 		super.onResume();
 		
-		Log.i(TAG, "Starting onResume");
+		logger.info("Starting onResume");
 		refreshUsage();
 	}
 	
@@ -55,12 +57,12 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 			try {
 				doUsageDownload(preferences);
 			} catch (Exception e) {
-				Log.e(TAG, "refreshUsage", e);
+				logger.error("refreshUsage", e);
 				AlertDialog dialog = createErrorDialog(e.getMessage());
 				dialog.show();
 			}
 		} else {
-			Log.i(TAG, "Username and password not provided");
+			logger.info("Username and password not provided");
 			Dialog dialog = createSettingsMissingDialog(getString(R.string.settings_missing_label));
 			dialog.show();
 		}

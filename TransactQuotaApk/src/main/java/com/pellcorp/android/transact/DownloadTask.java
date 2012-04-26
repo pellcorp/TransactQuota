@@ -2,16 +2,18 @@ package com.pellcorp.android.transact;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.pellcorp.android.transact.InvalidCredentialsException;
 import com.pellcorp.android.transact.UsageNotAvailableException;
 
 public abstract class DownloadTask<Result> extends AsyncTask<Void, Void, DownloadResult<Result>> {
-	private static final String TAG = DownloadTask.class.getName();
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	private final Context context;
 	private ProgressDialog dialog;
@@ -35,13 +37,13 @@ public abstract class DownloadTask<Result> extends AsyncTask<Void, Void, Downloa
 		} catch(InvalidCredentialsException e) {
 			return new DownloadResult<Result>(true);
 		} catch (UsageNotAvailableException e) {
-			Log.e(TAG, "UsageNotAvailableException", e);
+			logger.error("UsageNotAvailableException", e);
 			return new DownloadResult<Result>(e.getMessage());
 		} catch (IOException e) {
-			Log.e(TAG, "Connectivity Exception", e);
+			logger.error("Connectivity Exception", e);
 			return new DownloadResult<Result>(e.getMessage());
 		} catch (Exception e) {
-			Log.e(TAG, "Unknown Exception", e);
+			logger.error("Unknown Exception", e);
 			return new DownloadResult<Result>(e.getMessage());
 		}
 	}
