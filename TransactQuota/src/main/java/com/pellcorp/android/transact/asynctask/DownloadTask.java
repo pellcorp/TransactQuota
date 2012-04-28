@@ -5,8 +5,6 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.pellcorp.android.transact.InvalidCredentialsException;
@@ -15,23 +13,9 @@ import com.pellcorp.android.transact.UsageNotAvailableException;
 public abstract class DownloadTask<Result> extends AsyncTask<Void, Void, DownloadResult<Result>> {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
-	private final Context context;
-	private ProgressDialog dialog;
-	private final String loadingMessage;
-	
-	public DownloadTask(Context context, String loadingMessage) {
-		this.context = context;
-		this.loadingMessage = loadingMessage;
+	public DownloadTask() {
 	}
 	
-	@Override
-	protected void onPreExecute() {
-		dialog = new ProgressDialog(context);
-		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		dialog.setMessage(loadingMessage);
-		dialog.show();
-	}
-
 	@Override
 	protected DownloadResult<Result> doInBackground(Void ... whocares) {
 		try {
@@ -54,14 +38,6 @@ public abstract class DownloadTask<Result> extends AsyncTask<Void, Void, Downloa
 	protected abstract void onFinish(DownloadResult<Result> result);
 
 	protected void onPostExecute(DownloadResult<Result> result) {
-		if (dialog.isShowing()) {
-			try {
-		        dialog.dismiss();
-		        dialog = null;
-		    } catch (Exception e) {
-		        // nothing
-		    }
-        }
 		onFinish(result);
 	}
 }

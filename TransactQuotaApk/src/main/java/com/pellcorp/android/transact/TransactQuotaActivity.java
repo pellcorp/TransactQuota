@@ -1,34 +1,48 @@
 package com.pellcorp.android.transact;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pellcorp.android.transact.asynctask.DownloadResult;
-import com.pellcorp.android.transact.asynctask.DownloadTask;
-import com.pellcorp.android.transact.prefs.PreferenceProviderImpl;
 
-public class TransactQuotaActivity extends Activity implements OnClickListener {
+public class TransactQuotaActivity extends Activity {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
+	private TransactionQuotaService mBoundService;
+	private TextView peakUsage;
+	private TextView offPeakUsage;
+	
+    private ServiceConnection mConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            mBoundService = ((TransactionQuotaService.LocalBinder)service).getService();
+
+            Toast.makeText(TransactQuotaActivity.this, R.string.local_service_connected,
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            mBoundService = null;
+            Toast.makeText(TransactQuotaActivity.this, R.string.local_service_disconnected,
+                    Toast.LENGTH_SHORT).show();
+        }
+    };
+    
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,79 +50,42 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 		logger.info("Starting onCreate");
 		
 		setContentView(R.layout.main);
-
-		Button refreshButton = (Button) findViewById(R.id.refresh_button);
-		refreshButton.setOnClickListener(this);
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
 		
-		logger.info("Starting onResume");
-		refreshUsage();
+		peakUsage = (TextView) findViewById(R.id.PeakUsage);
+		offPeakUsage = (TextView) findViewById(R.id.OffPeakUsage);
 	}
+	
+	@Override
+    protected void onStart() {
+        super.onStart();
+
+        Intent intent = new Intent(this, TransactionQuotaService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (mBoundService != null) {
+            unbindService(mConnection);
+        }
+    }
 	
 	private void refreshUsage() {
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(this);
-
-		Preferences preferences = new Preferences(new PreferenceProviderImpl(this,
-				sharedPreferences));
-
-		if (preferences.getAccountUsername() != null
-				&& preferences.getAccountPassword() != null) {
-			try {
-				doUsageDownload(preferences);
-			} catch (Exception e) {
-				logger.error("refreshUsage", e);
-				AlertDialog dialog = createErrorDialog(e.getMessage());
+		if (mBoundService != null) {
+			DownloadResult<Usage> result = mBoundService.getUsage();
+			if (result.getResult() != null) {
+				peakUsage.setText(result.getResult().getPeakUsage().toString());
+				offPeakUsage.setText(result.getResult().getOffPeakUsage().toString());
+			} else if (result.isInvalidCredentials()) {
+				Dialog dialog = createSettingsMissingDialog(getString(R.string.invalid_account_details));
+				dialog.show();
+			} else {
+				AlertDialog dialog = createErrorDialog(result.getErrorMessage());
 				dialog.show();
 			}
-		} else {
-			logger.info("Username and password not provided");
-			Dialog dialog = createSettingsMissingDialog(getString(R.string.settings_missing_label));
-			dialog.show();
 		}
-	}
-	
-	private void doUsageDownload(final Preferences preferences) throws InterruptedException,
-			ExecutionException, TimeoutException {
-
-		DownloadTask<Usage> downloadTask = new DownloadTask<Usage>(this, 
-				getString(R.string.loading)) {
-			@Override
-			protected Usage doTask() throws Exception {
-				TransactQuota transactQuota = new TransactQuota(
-					preferences.getAccountUsername(),
-					preferences.getAccountPassword());
-				
-				try {
-					return transactQuota.getUsage();
-				} finally {
-					transactQuota.disconnect();
-				}
-			}
-
-			@Override
-			protected void onFinish(DownloadResult<Usage> usage) {
-				if (usage.getResult() != null) {
-					TextView peakUsage = (TextView) findViewById(R.id.PeakUsage);
-					TextView offPeakUsage = (TextView) findViewById(R.id.OffPeakUsage);
-
-					peakUsage.setText(usage.getResult().getPeakUsage().toString());
-					offPeakUsage.setText(usage.getResult().getOffPeakUsage().toString());
-				} else if (usage.isInvalidCredentials()) {
-					Dialog dialog = createSettingsMissingDialog(getString(R.string.invalid_account_details));
-					dialog.show();
-				} else {
-					AlertDialog dialog = createErrorDialog(usage.getErrorMessage());
-					dialog.show();
-				}
-			}
-		};
-
-		downloadTask.execute();
 	}
 
 	@Override
@@ -125,16 +102,11 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 		case R.id.settings:
 			startActivity(new Intent(this, PrefsActivity.class));
 			return true;
+		case R.id.refresh:
+			refreshUsage();
+			return true;
 		}
 		return false;
-	}
-
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.refresh_button:
-			refreshUsage();
-			break;
-		}
 	}
 
 	private AlertDialog createErrorDialog(String message) {
