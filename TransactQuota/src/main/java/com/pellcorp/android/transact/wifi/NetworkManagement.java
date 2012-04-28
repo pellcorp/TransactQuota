@@ -1,4 +1,4 @@
-package com.pellcorp.android.transact;
+package com.pellcorp.android.transact.wifi;
 
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;

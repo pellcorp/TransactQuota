@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpException;
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
@@ -41,51 +40,26 @@ import com.pellcorp.android.transact.sshtunnel.TunnelConfig;
 public class TransactQuota {
 	private static final String USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:11.0) Gecko/20100101 Firefox/11.0"; 
 	
-	private static final String URL = "https://${HOST_PORT}/portal/default/user/login?_next=/portal/default/index";
-	private static final String TRANSACT_PORTAL_HOST = "portal.vic.transact.com.au";
+	private static final String URL = "https://portal.vic.transact.com.au/portal/default/user/login?_next=/portal/default/index";
 	
 	private HttpClient client;
-	private Tunnel tunnel;
 	
 	private final String username;
 	private final String password;
-	private final String url;
 	
-	public TransactQuota(final String username, final String password) 
-			throws JSchException, KeyManagementException, NoSuchAlgorithmException {
-		this(null, username, password);
-	}
-
-	public TransactQuota(final TunnelConfig tunnelConfig, final String username, final String password) {
+	public TransactQuota(final String username, final String password) {
 		this.username = username;
 		this.password = password;
 		
 		try {
-			if (tunnelConfig != null) {
-				tunnel = new Tunnel(tunnelConfig);
-				HttpHost proxy = tunnel.connect(new HttpHost(TRANSACT_PORTAL_HOST, 443));
-				url  = URL.replace("${HOST_PORT}", proxy.getHostName() + ":" + proxy.getPort());
-			} else {
-				tunnel = null;
-				url = URL.replace("${HOST_PORT}", TRANSACT_PORTAL_HOST);
-			}
-			
 			client = createClient();
 			
 		} catch (Throwable t) {
-			// in case of exception be sure to clean up the ssl session
-			if (tunnel != null) {
-				tunnel.disconnect();
-			}
-			
 			throw new UsageNotAvailableException(t);
 		}
 	}
 	
 	public void disconnect() {
-		if (tunnel != null) {
-    		tunnel.disconnect();
-    	}
     	try {
     		client.getConnectionManager().shutdown();
     	} catch(Throwable t) {
@@ -99,8 +73,8 @@ public class TransactQuota {
 			HttpContext localContext = new BasicHttpContext();
 			localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 			
-			String formKey = doGetLogin(url, localContext);
-        	return doSubmit(url, formKey, localContext);
+			String formKey = doGetLogin(localContext);
+        	return doSubmit(formKey, localContext);
 		} catch(IOException ioe) {
 			throw ioe;
 		} catch(InvalidCredentialsException e) {
@@ -131,9 +105,9 @@ public class TransactQuota {
 		return new DefaultHttpClient(connManager, params);
 	}
 
-	private String doGetLogin(String url, HttpContext localContext) 
+	private String doGetLogin(HttpContext localContext) 
 			throws IOException, URISyntaxException, HttpException {
-		HttpGet get = new HttpGet(url);
+		HttpGet get = new HttpGet(URL);
 		HttpResponse response = client.execute(get, localContext);
 		String html = EntityUtils.toString(response.getEntity());
 		Document doc = Jsoup.parse(html, URL);
@@ -141,8 +115,8 @@ public class TransactQuota {
     	return elements.first().attr("value");
 	}
 	
-	private Usage doSubmit(String url, String formKey, HttpContext localContext) throws Exception {
-		HttpPost post = new HttpPost(url);
+	private Usage doSubmit(String formKey, HttpContext localContext) throws Exception {
+		HttpPost post = new HttpPost(URL);
 
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>();
 		parameters.add(new BasicNameValuePair("uname", username));

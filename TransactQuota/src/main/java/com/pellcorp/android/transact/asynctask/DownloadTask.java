@@ -1,4 +1,4 @@
-package com.pellcorp.android.transact;
+package com.pellcorp.android.transact.asynctask;
 
 import java.io.IOException;
 
@@ -17,16 +17,18 @@ public abstract class DownloadTask<Result> extends AsyncTask<Void, Void, Downloa
 	
 	private final Context context;
 	private ProgressDialog dialog;
+	private final String loadingMessage;
 	
-	public DownloadTask(Context context) {
+	public DownloadTask(Context context, String loadingMessage) {
 		this.context = context;
+		this.loadingMessage = loadingMessage;
 	}
 	
 	@Override
 	protected void onPreExecute() {
 		dialog = new ProgressDialog(context);
 		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		dialog.setMessage(context.getString(R.string.loading));
+		dialog.setMessage(loadingMessage);
 		dialog.show();
 	}
 

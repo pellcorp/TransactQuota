@@ -1,4 +1,4 @@
-package com.pellcorp.android.transact;
+package com.pellcorp.android.transact.asynctask;
 
 public class DownloadResult<R> {
 	private R result;

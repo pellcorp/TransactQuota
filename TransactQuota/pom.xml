@@ -13,6 +13,7 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.6.1</version>
+			<scope>provided</scope>
 		</dependency>
 		
 	    <dependency>
@@ -39,12 +40,21 @@
 			<version>4.0.1</version>
 			<!-- set to this temporarily when you want to check api compatibility with android -->
 			<!--  <version>4.0-alpha4</version>  -->
+			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
 			<version>4.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<version>2.3.3</version>
+			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>

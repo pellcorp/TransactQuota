@@ -22,6 +22,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.pellcorp.android.transact.asynctask.DownloadResult;
+import com.pellcorp.android.transact.asynctask.DownloadTask;
+import com.pellcorp.android.transact.prefs.PreferenceProviderImpl;
+
 public class TransactQuotaActivity extends Activity implements OnClickListener {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -71,11 +75,11 @@ public class TransactQuotaActivity extends Activity implements OnClickListener {
 	private void doUsageDownload(final Preferences preferences) throws InterruptedException,
 			ExecutionException, TimeoutException {
 
-		DownloadTask<Usage> downloadTask = new DownloadTask<Usage>(this) {
+		DownloadTask<Usage> downloadTask = new DownloadTask<Usage>(this, 
+				getString(R.string.loading)) {
 			@Override
 			protected Usage doTask() throws Exception {
 				TransactQuota transactQuota = new TransactQuota(
-					preferences.getTunnelConfig(),
 					preferences.getAccountUsername(),
 					preferences.getAccountPassword());
 				

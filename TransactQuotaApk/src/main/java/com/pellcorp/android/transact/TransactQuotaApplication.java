@@ -7,7 +7,7 @@ import android.app.Application;
 
 @ReportsCrashes(formKey = "dHVIazZTcEwyblRwQnYzT3I4RWswTkE6MQ",
 	resToastText = R.string.crash_toast_text) 
-public class MyApplication extends Application {
+public class TransactQuotaApplication extends Application {
 	@Override
     public void onCreate() {
         ACRA.init(this);
