@@ -1,19 +1,21 @@
 package com.pellcorp.android.transact;
 
+import java.math.BigDecimal;
+
 public class Usage {
-	private Double peakUsage;
-	private Double offPeakUsage;
+	private BigDecimal peakUsage;
+	private BigDecimal offPeakUsage;
 	
-	public Usage(Double peakUsage, Double offPeakUsage) {
+	public Usage(BigDecimal peakUsage, BigDecimal offPeakUsage) {
 		this.peakUsage = peakUsage;
 		this.offPeakUsage = offPeakUsage;
 	}
 
-	public Double getPeakUsage() {
+	public BigDecimal getPeakUsage() {
 		return peakUsage;
 	}
 
-	public Double getOffPeakUsage() {
+	public BigDecimal getOffPeakUsage() {
 		return offPeakUsage;
 	}
 }

@@ -1,6 +1,9 @@
 package com.pellcorp.android.transact;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+import java.math.BigDecimal;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
@@ -25,8 +28,8 @@ public class UsageParserTest {
 		String usageHtml = loadResource("/usage.html");
 		Usage usage = UsageParser.parseUsageBlock(usageHtml);
 		
-		assertEquals(new Double("35.069"), usage.getPeakUsage());
-		assertEquals(new Double("10.851"), usage.getOffPeakUsage());
+		assertEquals(new BigDecimal("35.069"), usage.getPeakUsage());
+		assertEquals(new BigDecimal("10.851"), usage.getOffPeakUsage());
 	}
 	
 	private String loadResource(String path) throws Exception {

@@ -1,5 +1,6 @@
 package com.pellcorp.android.transact;
 
+import java.math.BigDecimal;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -22,7 +23,7 @@ public class TransactionQuotaService extends Service {
 
 	// the default so we always return something
 	private DownloadResult<Usage> currentUsage = 
-			new DownloadResult<Usage>(new Usage(0.0, 0.0));
+			new DownloadResult<Usage>(new Usage(BigDecimal.ZERO, BigDecimal.ZERO));
 	
 	private Preferences preferences;
 
