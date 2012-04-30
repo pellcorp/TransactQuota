@@ -32,6 +32,15 @@ public class UsageParserTest {
 		assertEquals(new BigDecimal("10.851"), usage.getOffPeakUsage());
 	}
 	
+	@Test
+	public void testParseUsageBlockInMb() throws Exception {
+		String usageHtml = loadResource("/usage-mb.html");
+		Usage usage = UsageParser.parseUsageBlock(usageHtml);
+		
+		assertEquals(new BigDecimal("0.053661"), usage.getPeakUsage());
+		assertEquals(new BigDecimal("0.093106"), usage.getOffPeakUsage());
+	}
+	
 	private String loadResource(String path) throws Exception {
 		return IOUtils.toString(UsageParserTest.class.getResourceAsStream(path));
 	}
