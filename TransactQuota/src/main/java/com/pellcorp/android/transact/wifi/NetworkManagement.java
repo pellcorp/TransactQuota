@@ -1,21 +1,17 @@
 package com.pellcorp.android.transact.wifi;
 
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 
 public class NetworkManagement {
-	private final ConnectivityManager connectivityManager;
+	private final WifiManager wifiManager;
 	
-	public NetworkManagement(final ConnectivityManager connectivityManager) {
-		this.connectivityManager = connectivityManager;
+	public NetworkManagement(final WifiManager wifiManager) {
+		this.wifiManager = wifiManager;
 	}
 	
 	public boolean isWifiConnected() {
-	    NetworkInfo networkInfo = null;
-	    if (connectivityManager != null) {
-	        networkInfo =
-	            connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-	    }
-	    return networkInfo == null ? false : networkInfo.isConnected();
+	    WifiInfo networkInfo = wifiManager.getConnectionInfo();
+	    return networkInfo != null;
 	}
 }

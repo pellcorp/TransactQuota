@@ -37,15 +37,4 @@ public class PreferenceProviderImpl implements PreferenceProvider {
 			return defaultValue;
 		}
 	}
-
-	@Override
-	public File getFile(int resId) {
-		String value = getString(resId);
-		if (value != null) {
-			File file = new File(value);
-			return file;
-		} else {
-			return null;
-		}
-	}
 }

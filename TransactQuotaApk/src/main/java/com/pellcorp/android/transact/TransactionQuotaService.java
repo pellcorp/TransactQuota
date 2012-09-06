@@ -1,11 +1,6 @@
 package com.pellcorp.android.transact;
 
 import java.math.BigDecimal;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import android.app.Service;
 import android.content.Intent;
@@ -19,9 +14,6 @@ import com.pellcorp.android.transact.asynctask.DownloadTask;
 import com.pellcorp.android.transact.prefs.PreferenceProviderImpl;
 
 public class TransactionQuotaService extends Service {
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-
-	// the default so we always return something
 	private DownloadResult<Usage> currentUsage = 
 			new DownloadResult<Usage>(new Usage(BigDecimal.ZERO, BigDecimal.ZERO));
 	
@@ -46,7 +38,8 @@ public class TransactionQuotaService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		return START_STICKY;
+		doUsageDownload(preferences);
+		return START_NOT_STICKY;
 	}
 
 	@Override
@@ -58,9 +51,7 @@ public class TransactionQuotaService extends Service {
 		return currentUsage;
 	}
 
-	private void doUsageDownload(final Preferences preferences)
-			throws InterruptedException, ExecutionException, TimeoutException {
-
+	private void doUsageDownload(final Preferences preferences) {
 		DownloadTask<Usage> downloadTask = new DownloadTask<Usage>() {
 			@Override
 			protected Usage doTask() throws Exception {

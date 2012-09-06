@@ -34,8 +34,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import com.jcraft.jsch.JSchException;
-import com.pellcorp.android.transact.sshtunnel.Tunnel;
-import com.pellcorp.android.transact.sshtunnel.TunnelConfig;
 
 public class TransactQuota {
 	private static final String USER_AGENT = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:11.0) Gecko/20100101 Firefox/11.0"; 
