@@ -1,7 +1,5 @@
 package com.pellcorp.android.transact.prefs;
 
-import java.io.File;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 

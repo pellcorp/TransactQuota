@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.pellcorp.android.transact.asynctask.DownloadResult;
 
 public class TransactQuotaActivity extends Activity {
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass().getName());
 	
 	private TransactionQuotaService mBoundService;
 	private TextView peakUsage;
@@ -30,6 +30,8 @@ public class TransactQuotaActivity extends Activity {
 	
     private ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
+        	logger.info("onServiceConnected");
+        	
             mBoundService = ((TransactionQuotaService.LocalBinder)service).getService();
 
             Toast.makeText(TransactQuotaActivity.this, R.string.local_service_connected,
@@ -37,6 +39,8 @@ public class TransactQuotaActivity extends Activity {
         }
 
         public void onServiceDisconnected(ComponentName className) {
+        	logger.info("onServiceDisconnected");
+        	
             mBoundService = null;
             Toast.makeText(TransactQuotaActivity.this, R.string.local_service_disconnected,
                     Toast.LENGTH_SHORT).show();
@@ -53,24 +57,10 @@ public class TransactQuotaActivity extends Activity {
 		
 		peakUsage = (TextView) findViewById(R.id.PeakUsage);
 		offPeakUsage = (TextView) findViewById(R.id.OffPeakUsage);
-	}
-	
-	@Override
-    protected void onStart() {
-        super.onStart();
-
-        Intent intent = new Intent(this, TransactionQuotaService.class);
+		
+		Intent intent = new Intent(this, TransactionQuotaService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        if (mBoundService != null) {
-            unbindService(mConnection);
-        }
-    }
+	}
 	
 	private void refreshUsage() {
 		if (mBoundService != null) {

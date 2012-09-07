@@ -1,6 +1,7 @@
 package com.pellcorp.android.transact;
 
-import java.math.BigDecimal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import android.app.Service;
 import android.content.Intent;
@@ -14,8 +15,10 @@ import com.pellcorp.android.transact.asynctask.DownloadTask;
 import com.pellcorp.android.transact.prefs.PreferenceProviderImpl;
 
 public class TransactionQuotaService extends Service {
+	private final Logger logger = LoggerFactory.getLogger(getClass().getName());
+	
 	private DownloadResult<Usage> currentUsage = 
-			new DownloadResult<Usage>(new Usage(BigDecimal.ZERO, BigDecimal.ZERO));
+			new DownloadResult<Usage>("Service not run!");
 	
 	private Preferences preferences;
 
@@ -29,6 +32,8 @@ public class TransactionQuotaService extends Service {
 
 	@Override
 	public void onCreate() {
+		logger.info("onCreate...");
+		
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
@@ -38,6 +43,8 @@ public class TransactionQuotaService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		logger.info("Starting...");
+		
 		doUsageDownload(preferences);
 		return START_NOT_STICKY;
 	}
@@ -55,6 +62,8 @@ public class TransactionQuotaService extends Service {
 		DownloadTask<Usage> downloadTask = new DownloadTask<Usage>() {
 			@Override
 			protected Usage doTask() throws Exception {
+				logger.info("Starting task");
+				
 				if (preferences.getAccountUsername() != null
 						&& preferences.getAccountPassword() != null) {
 					TransactQuota transactQuota = new TransactQuota(
@@ -67,12 +76,15 @@ public class TransactionQuotaService extends Service {
 						transactQuota.disconnect();
 					}
 				} else {
+					logger.info("Invalid Credentials...");
 					throw new InvalidCredentialsException();
 				}
 			}
 
 			@Override
 			protected void onFinish(DownloadResult<Usage> usage) {
+				logger.info("Finished task");
+				
 				TransactionQuotaService.this.currentUsage = usage;
 			}
 		};
