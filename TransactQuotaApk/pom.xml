@@ -2,14 +2,15 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>TransactQuotaApk</artifactId>
 	<packaging>apk</packaging>
-
+	<name>Transact Quota Android Package</name>
+	
 	<parent>
 		<groupId>com.pellcorp.android</groupId>
 		<artifactId>TransactQuotaParent</artifactId>
 		<version>0.0.5-SNAPSHOT</version>
 	</parent>
 
-	<name>TransactQuota</name>
+	
 	<dependencies>
 	    <dependency>
 			<groupId>org.slf4j</groupId>

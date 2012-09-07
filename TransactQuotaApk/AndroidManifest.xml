@@ -4,14 +4,12 @@
     <uses-sdk android:minSdkVersion="10"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-feature android:name="android.hardware.wifi" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-feature android:name="android.hardware.wifi"/>
     
-    <application android:icon="@drawable/ic_launcher" android:label="@string/app_name" 
-        android:name=".TransactQuotaApplication">
+    <application android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name=".TransactQuotaApplication">
                 
-        <activity android:configChanges="keyboardHidden|orientation" 
-            android:label="@string/app_name" android:name=".TransactQuotaActivity">
+        <activity android:configChanges="keyboardHidden|orientation" android:label="@string/app_name" android:name=".TransactQuotaActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -20,14 +18,14 @@
         </activity>
         
         <activity android:label="@string/settings_title" android:name=".PrefsActivity"/>
-        <service android:name=".TransactionQuotaService" />
+        <service android:name=".TransactionQuotaService"/>
         
-        <receiver android:name="TransactQuotaSchedulerReceiver" >
+        <receiver android:name="TransactQuotaSchedulerReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
-        <receiver android:name="TransactQuotaStartReceiver" />
+        <receiver android:name="TransactQuotaStartReceiver"/>
     </application>
 
 </manifest>
