@@ -24,6 +24,8 @@ public class TransactQuotaActivity extends Activity implements Receiver {
 	private TextView peakUsage;
 	private TextView offPeakUsage;
 
+	private boolean usageLoaded;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,6 +41,7 @@ public class TransactQuotaActivity extends Activity implements Receiver {
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         receiver = new TransactQuotaUsageReceiver(this);
         registerReceiver(receiver, filter);
+        
 	}
 
 	@Override
@@ -47,7 +50,9 @@ public class TransactQuotaActivity extends Activity implements Receiver {
 
         logger.info("Starting onStart");
         
-        refreshUsage();
+        if (!usageLoaded) {
+            refreshUsage();
+        }
     }
 	
 	@Override
@@ -56,6 +61,9 @@ public class TransactQuotaActivity extends Activity implements Receiver {
 	}
 
 	private void refreshUsage() {
+		peakUsage.setText("-");
+		offPeakUsage.setText("-");
+		
 		Intent intent = new Intent(this, TransactionQuotaService.class);
         startService(intent);
 	}
@@ -116,6 +124,7 @@ public class TransactQuotaActivity extends Activity implements Receiver {
 		if (result.getResult() != null) {
 			peakUsage.setText(result.getResult().getPeakUsage().toString());
 			offPeakUsage.setText(result.getResult().getOffPeakUsage().toString());
+			usageLoaded = true;
 		} else if (result.isInvalidCredentials()) {
 			Dialog dialog = createSettingsMissingDialog(getString(R.string.invalid_account_details));
 			dialog.show();
