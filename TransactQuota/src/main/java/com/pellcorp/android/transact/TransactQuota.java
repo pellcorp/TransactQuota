@@ -53,7 +53,7 @@ public class TransactQuota {
 		this.username = username;
 		this.password = password;
 		
-		logger.info("Username: {}, Password: {}", username, password);
+		//logger.info("Username: {}, Password: {}", username, password);
 		
 		try {
 			client = createClient();
