@@ -28,16 +28,12 @@ public class TransactionQuotaService extends IntentService {
 	public void onCreate() {
 		super.onCreate();
 		
-		logger.info("onCreate...");
-		
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		preferences = new Preferences(new PreferenceProviderImpl(this, sharedPreferences));
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		logger.info("Starting task");
-		
 		TransactQuota transactQuota = new TransactQuota(
 				preferences.getAccountUsername(),
 				preferences.getAccountPassword());
@@ -54,13 +50,13 @@ public class TransactionQuotaService extends IntentService {
 			usage = new DownloadResult<Usage>(true);
 		} catch (UsageNotAvailableException e) {
 			logger.error("UsageNotAvailableException", e);
-			usage = new DownloadResult<Usage>(e.getMessage());
+			usage = new DownloadResult<Usage>("Usage Not Available");
 		} catch (IOException e) {
 			logger.error("Connectivity Exception", e);
-			usage = new DownloadResult<Usage>(e.getMessage());
+			usage = new DownloadResult<Usage>("Connection Failed");
 		} catch (Exception e) {
 			logger.error("Unknown Exception", e);
-			usage = new DownloadResult<Usage>(e.getMessage());
+			usage = new DownloadResult<Usage>("Unknown Error");
 		} finally {
 			transactQuota.disconnect();
 		}
