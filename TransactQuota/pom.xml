@@ -21,18 +21,6 @@
 	        <artifactId>jsoup</artifactId>
 	        <version>1.6.2</version>
 	    </dependency>
-	    
-	    <dependency>
-	    	<groupId>com.jcraft</groupId>
-	    	<artifactId>jsch</artifactId>
-	    	<version>0.1.47</version>
-	    </dependency>
-	    
-	    <dependency>
-	        <groupId>com.jcraft</groupId>
-	        <artifactId>jzlib</artifactId>
-	        <version>1.0.7</version>
-	    </dependency>
 
 	    <dependency>
 			<groupId>org.apache.httpcomponents</groupId>

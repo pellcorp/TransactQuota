@@ -35,8 +35,6 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcraft.jsch.JSchException;
-
 public class TransactQuota {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -91,7 +89,7 @@ public class TransactQuota {
         }
 	}
 	
-	private HttpClient createClient() throws JSchException, KeyManagementException, NoSuchAlgorithmException {
+	private HttpClient createClient() throws NoSuchAlgorithmException, KeyManagementException {
 		int timeoutConnection = 5000;
 		int timeoutSocket = 10000;
 		
