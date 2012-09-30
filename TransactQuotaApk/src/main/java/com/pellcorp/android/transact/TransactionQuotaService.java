@@ -46,7 +46,7 @@ public class TransactionQuotaService extends Service {
 		logger.info("Starting...");
 		
 		doUsageDownload(preferences);
-		return START_NOT_STICKY;
+		return START_STICKY;
 	}
 
 	@Override

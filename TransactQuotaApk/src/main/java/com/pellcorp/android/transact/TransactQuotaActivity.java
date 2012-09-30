@@ -23,51 +23,69 @@ import com.pellcorp.android.transact.asynctask.DownloadResult;
 
 public class TransactQuotaActivity extends Activity {
 	private final Logger logger = LoggerFactory.getLogger(getClass().getName());
-	
+
 	private TransactionQuotaService mBoundService;
 	private TextView peakUsage;
 	private TextView offPeakUsage;
-	
-    private ServiceConnection mConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder service) {
-        	logger.info("onServiceConnected");
-        	
-            mBoundService = ((TransactionQuotaService.LocalBinder)service).getService();
 
-            Toast.makeText(TransactQuotaActivity.this, R.string.local_service_connected,
-                    Toast.LENGTH_SHORT).show();
-        }
+	private ServiceConnection mConnection = new ServiceConnection() {
+		public void onServiceConnected(ComponentName className, IBinder service) {
+			logger.info("onServiceConnected");
 
-        public void onServiceDisconnected(ComponentName className) {
-        	logger.info("onServiceDisconnected");
-        	
-            mBoundService = null;
-            Toast.makeText(TransactQuotaActivity.this, R.string.local_service_disconnected,
-                    Toast.LENGTH_SHORT).show();
-        }
-    };
-    
+			mBoundService = ((TransactionQuotaService.LocalBinder) service)
+					.getService();
+
+			Toast.makeText(TransactQuotaActivity.this,
+					R.string.local_service_connected, Toast.LENGTH_SHORT)
+					.show();
+		}
+
+		public void onServiceDisconnected(ComponentName className) {
+			logger.info("onServiceDisconnected");
+
+			mBoundService = null;
+			Toast.makeText(TransactQuotaActivity.this,
+					R.string.local_service_disconnected, Toast.LENGTH_SHORT)
+					.show();
+		}
+	};
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		logger.info("Starting onCreate");
-		
+
 		setContentView(R.layout.main);
-		
+
 		peakUsage = (TextView) findViewById(R.id.PeakUsage);
 		offPeakUsage = (TextView) findViewById(R.id.OffPeakUsage);
-		
-		Intent intent = new Intent(this, TransactionQuotaService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
+
+	@Override
+    protected void onStart() {
+        super.onStart();
+
+        Intent intent = new Intent(this, TransactionQuotaService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
 	
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+		if (mBoundService != null) {
+			unbindService(mConnection);
+		}
+	}
+
 	private void refreshUsage() {
 		if (mBoundService != null) {
 			DownloadResult<Usage> result = mBoundService.getUsage();
 			if (result.getResult() != null) {
 				peakUsage.setText(result.getResult().getPeakUsage().toString());
-				offPeakUsage.setText(result.getResult().getOffPeakUsage().toString());
+				offPeakUsage.setText(result.getResult().getOffPeakUsage()
+						.toString());
 			} else if (result.isInvalidCredentials()) {
 				Dialog dialog = createSettingsMissingDialog(getString(R.string.invalid_account_details));
 				dialog.show();

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="005" android:versionName="0.0.5-SNAPSHOT" package="com.pellcorp.android.transact">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="006" android:versionName="0.0.6-SNAPSHOT" package="com.pellcorp.android.transact">
 
     <uses-sdk android:minSdkVersion="10"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -19,13 +19,6 @@
         
         <activity android:label="@string/settings_title" android:name=".PrefsActivity"/>
         <service android:name=".TransactionQuotaService"/>
-        
-        <receiver android:name="TransactQuotaSchedulerReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-        </receiver>
-        <receiver android:name="TransactQuotaStartReceiver"/>
     </application>
 
 </manifest>
