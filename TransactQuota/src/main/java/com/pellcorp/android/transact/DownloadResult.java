@@ -1,6 +1,10 @@
-package com.pellcorp.android.transact.asynctask;
+package com.pellcorp.android.transact;
 
-public class DownloadResult<R> {
+import java.io.Serializable;
+
+public class DownloadResult<R> implements Serializable {
+	private static final long serialVersionUID = -8445426032593156662L;
+	
 	private R result;
 	private boolean invalidCredentials;
 	private String errorMessage;

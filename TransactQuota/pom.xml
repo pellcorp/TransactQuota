@@ -6,9 +6,8 @@
 	<parent>
 		<groupId>com.pellcorp.android</groupId>
 		<artifactId>TransactQuotaParent</artifactId>
-		<version>0.0.5-SNAPSHOT</version>
+		<version>0.0.6-SNAPSHOT</version>
 	</parent>
-	
 	<dependencies>
 	    <dependency>
 			<groupId>org.slf4j</groupId>
@@ -94,6 +93,15 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+	        <plugin>
+	            <artifactId>maven-compiler-plugin</artifactId>
+	            <version>2.3.2</version>
+	            <configuration>
+	                <source>1.6</source>
+	                <target>1.6</target>
+                </configuration>
+            </plugin>
 	    </plugins>
 	</build>
 </project>
