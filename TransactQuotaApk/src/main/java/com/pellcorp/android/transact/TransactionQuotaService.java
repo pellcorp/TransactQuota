@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.IBinder;
 import android.preference.PreferenceManager;
 
 import com.pellcorp.android.transact.prefs.PreferenceProviderImpl;

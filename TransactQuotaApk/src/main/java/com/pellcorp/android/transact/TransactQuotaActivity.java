@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -23,9 +24,10 @@ public class TransactQuotaActivity extends Activity implements Receiver {
 	private TransactQuotaUsageReceiver receiver;
 	private TextView peakUsage;
 	private TextView offPeakUsage;
+	private ProgressDialog progressDialog;
 
 	private boolean usageLoaded;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,25 +38,24 @@ public class TransactQuotaActivity extends Activity implements Receiver {
 
 		peakUsage = (TextView) findViewById(R.id.PeakUsage);
 		offPeakUsage = (TextView) findViewById(R.id.OffPeakUsage);
-		
+
 		IntentFilter filter = new IntentFilter(TransactQuotaUsageReceiver.ACTION_USAGE_DOWNLOADED);
-        filter.addCategory(Intent.CATEGORY_DEFAULT);
-        receiver = new TransactQuotaUsageReceiver(this);
-        registerReceiver(receiver, filter);
-        
+		filter.addCategory(Intent.CATEGORY_DEFAULT);
+		receiver = new TransactQuotaUsageReceiver(this);
+		registerReceiver(receiver, filter);
 	}
 
 	@Override
-    protected void onStart() {
-        super.onStart();
+	protected void onStart() {
+		super.onStart();
 
-        logger.info("Starting onStart");
-        
-        if (!usageLoaded) {
-            refreshUsage();
-        }
-    }
-	
+		logger.info("Starting onStart");
+
+		if (!usageLoaded) {
+			refreshUsage();
+		}
+	}
+
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -63,9 +64,11 @@ public class TransactQuotaActivity extends Activity implements Receiver {
 	private void refreshUsage() {
 		peakUsage.setText("-");
 		offPeakUsage.setText("-");
+
+		progressDialog = ProgressDialog.show(this, "Loading...", "Loading Usage...");
 		
 		Intent intent = new Intent(this, TransactionQuotaService.class);
-        startService(intent);
+		startService(intent);
 	}
 
 	@Override
@@ -121,6 +124,8 @@ public class TransactQuotaActivity extends Activity implements Receiver {
 
 	@Override
 	public void onReceive(DownloadResult<Usage> result) {
+		progressDialog.dismiss();
+		
 		if (result.getResult() != null) {
 			peakUsage.setText(result.getResult().getPeakUsage().toString());
 			offPeakUsage.setText(result.getResult().getOffPeakUsage().toString());

@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-
 public class TransactQuotaUsageReceiver extends BroadcastReceiver {
 	public static final String ACTION_USAGE_DOWNLOADED =
 		      "com.pellcorp.android.transact.action.USAGE_DOWNLOADED";
@@ -23,6 +22,7 @@ public class TransactQuotaUsageReceiver extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		@SuppressWarnings("unchecked")
 		DownloadResult<Usage> results = (DownloadResult<Usage>) intent.getSerializableExtra(TransactionQuotaService.USAGE_DATA);
 		receiver.onReceive(results);
 	}
