@@ -7,10 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
-import com.pellcorp.android.transact.prefs.PreferenceProviderImpl;
 
 public class TransactionQuotaService extends IntentService {
 	public static final String USAGE_DATA = "com.pellcorp.android.transact.USAGE_DATA";
@@ -27,8 +23,7 @@ public class TransactionQuotaService extends IntentService {
 	public void onCreate() {
 		super.onCreate();
 		
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		preferences = new Preferences(new PreferenceProviderImpl(this, sharedPreferences));
+		preferences = Preferences.getPreferences(this);
 	}
 
 	@Override
@@ -39,8 +34,7 @@ public class TransactionQuotaService extends IntentService {
 
 		DownloadResult<Usage> usage = null;
 		try {
-			if (preferences.getAccountUsername() != null
-					&& preferences.getAccountPassword() != null) {
+			if (preferences.isConfigured()) {
 				usage = new DownloadResult<Usage>(transactQuota.getUsage());
 			} else {
 				usage = new DownloadResult<Usage>(true);

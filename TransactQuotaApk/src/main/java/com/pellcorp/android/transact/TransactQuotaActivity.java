@@ -25,13 +25,16 @@ public class TransactQuotaActivity extends Activity implements Receiver {
 	private TextView peakUsage;
 	private TextView offPeakUsage;
 	private ProgressDialog progressDialog;
-
+	private Preferences preferences;
+	
 	private boolean usageLoaded;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		preferences = Preferences.getPreferences(this);
+		
 		logger.info("Starting onCreate");
 
 		setContentView(R.layout.main);
@@ -56,19 +59,19 @@ public class TransactQuotaActivity extends Activity implements Receiver {
 		}
 	}
 
-	@Override
-	protected void onStop() {
-		super.onStop();
-	}
-
 	private void refreshUsage() {
 		peakUsage.setText("-");
 		offPeakUsage.setText("-");
-
-		progressDialog = ProgressDialog.show(this, "Loading...", "Loading Usage...");
 		
-		Intent intent = new Intent(this, TransactionQuotaService.class);
-		startService(intent);
+		if (preferences.isConfigured()) {
+			progressDialog = ProgressDialog.show(this, getString(R.string.loading_usage), getString(R.string.please_wait));
+		
+			Intent intent = new Intent(this, TransactionQuotaService.class);
+			startService(intent);
+		} else {
+			Dialog dialog = createSettingsMissingDialog(getString(R.string.invalid_account_details));
+			dialog.show();
+		}
 	}
 
 	@Override

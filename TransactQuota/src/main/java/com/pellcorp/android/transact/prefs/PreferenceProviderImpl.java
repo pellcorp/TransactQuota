@@ -14,7 +14,12 @@ public class PreferenceProviderImpl implements PreferenceProvider {
 	
 	@Override
 	public String getString(int resId) {
-		return sharedPreferences.getString(ctx.getString(resId), null);
+		String value = sharedPreferences.getString(ctx.getString(resId), null);
+		if (value != null && value.length() == 0) {
+			return null;
+		} else {
+			return value;
+		}
 	}
 	
 	@Override
